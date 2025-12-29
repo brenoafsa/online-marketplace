@@ -1,0 +1,31 @@
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: react-client
+    ports:
+      - "3000:3000"
+    environment:
+      - BUN_WATCH=1
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.3"
+        reservations:
+          memory: 128M
+          cpus: "0.15"
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
