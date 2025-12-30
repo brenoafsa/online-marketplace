@@ -39,6 +39,7 @@ services:
     container_name: bun-server
     ports:
       - "3001:3001"
+      - "4983:4983"
     environment:
       - BUN_WATCH=1
       - CHOKIDAR_USEPOLLING=true
@@ -54,3 +55,25 @@ services:
     restart: unless-stopped
     stdin_open: true
     tty: true
+    
+  database:
+    image: postgres:16
+    container_name: marketplace_db
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  postgres_data:
