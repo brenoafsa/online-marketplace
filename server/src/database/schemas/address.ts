@@ -9,6 +9,7 @@ export const addressTable = pgTable("address", {
   neighborhood: text('neighborhood').notNull(),
   latitude: doublePrecision('latitude').notNull(),
   longitude: doublePrecision('longitude').notNull(),
+  userId: text('user_id').notNull().references(() => userTable.id, { onDelete: 'cascade' })
 })
 
 export const addressRelations = relations(addressTable, ({ one }) => ({

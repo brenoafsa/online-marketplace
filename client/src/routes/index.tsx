@@ -21,7 +21,7 @@ function App() {
 
   return (
     <>
-      <div className='bg-app-dark-gray text-white'>
+      <div className='bg-app-dark-gray text-white pt-18'>
         {query.data?.map((each: User) => (
           <p className='p-2' key={each.id}>{each.name}: {each.username}: {each.phone}</p>
         ))}

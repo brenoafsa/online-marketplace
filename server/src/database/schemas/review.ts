@@ -9,7 +9,9 @@ export const reviewTable = pgTable("review", {
   stars: real('stars').notNull(),
   content: text('content').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at')
+  updatedAt: timestamp('updated_at'),
+  productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }),
+  userId: text('user_id').references(() => userTable.id, { onDelete: 'set null' })
 }, (table) => [
     check("valid_stars_check", sql`${table.stars} BETWEEN 0 AND 5`)
 ])

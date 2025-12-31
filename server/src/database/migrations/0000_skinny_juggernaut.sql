@@ -2,16 +2,26 @@ CREATE TYPE "public"."CATEGORY" AS ENUM('GAME', 'ASSET', 'COURSE', 'AUDIO', 'TEM
 CREATE TYPE "public"."PRODUCT_TYPE" AS ENUM('PHYSICAL', 'DIGITAL');--> statement-breakpoint
 CREATE TYPE "public"."LANGUAGE" AS ENUM('BR', 'EN');--> statement-breakpoint
 CREATE TYPE "public"."ROLE" AS ENUM('CUSTOMER', 'SELLER', 'ADMIN');--> statement-breakpoint
+CREATE TABLE "address" (
+	"id" text PRIMARY KEY NOT NULL,
+	"street" text NOT NULL,
+	"neighborhood" text NOT NULL,
+	"latitude" double precision NOT NULL,
+	"longitude" double precision NOT NULL,
+	"user_id" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "product" (
 	"id" text PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,
 	"price" real NOT NULL,
 	"sale_percentage" integer,
 	"purchase_count" integer DEFAULT 0,
-	"on_spotlight" boolean NOT NULL,
+	"on_spotlight" boolean DEFAULT false NOT NULL,
 	"stars" real DEFAULT 0,
 	"type" "PRODUCT_TYPE" NOT NULL,
 	"category" "CATEGORY" NOT NULL,
+	"creator_id" text NOT NULL,
 	CONSTRAINT "valid_percentage_check" CHECK ("product"."sale_percentage" BETWEEN 1 AND 100),
 	CONSTRAINT "valid_stars_check" CHECK ("product"."stars" BETWEEN 0 AND 5)
 );
@@ -26,7 +36,9 @@ CREATE TABLE "product_order" (
 CREATE TABLE "purchase" (
 	"id" text PRIMARY KEY NOT NULL,
 	"total_price" real NOT NULL,
-	"created_at" timestamp DEFAULT now()
+	"created_at" timestamp DEFAULT now(),
+	"user_id" text NOT NULL,
+	"address_id" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "review" (
@@ -35,6 +47,8 @@ CREATE TABLE "review" (
 	"content" text NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp,
+	"product_id" text,
+	"user_id" text,
 	CONSTRAINT "valid_stars_check" CHECK ("review"."stars" BETWEEN 0 AND 5)
 );
 --> statement-breakpoint
@@ -58,10 +72,18 @@ CREATE TABLE "wish_list_product" (
 );
 --> statement-breakpoint
 CREATE TABLE "wish_list" (
-	"id" text PRIMARY KEY NOT NULL
+	"id" text PRIMARY KEY NOT NULL,
+	"user_id" text NOT NULL
 );
 --> statement-breakpoint
+ALTER TABLE "address" ADD CONSTRAINT "address_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "product" ADD CONSTRAINT "product_creator_id_user_id_fk" FOREIGN KEY ("creator_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "product_order" ADD CONSTRAINT "product_order_purchase_id_purchase_id_fk" FOREIGN KEY ("purchase_id") REFERENCES "public"."purchase"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "product_order" ADD CONSTRAINT "product_order_product_id_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."product"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "purchase" ADD CONSTRAINT "purchase_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "purchase" ADD CONSTRAINT "purchase_address_id_address_id_fk" FOREIGN KEY ("address_id") REFERENCES "public"."address"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "review" ADD CONSTRAINT "review_product_id_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."product"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "review" ADD CONSTRAINT "review_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "wish_list_product" ADD CONSTRAINT "wish_list_product_wish_list_id_wish_list_id_fk" FOREIGN KEY ("wish_list_id") REFERENCES "public"."wish_list"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "wish_list_product" ADD CONSTRAINT "wish_list_product_product_id_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."product"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "wish_list_product" ADD CONSTRAINT "wish_list_product_product_id_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."product"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "wish_list" ADD CONSTRAINT "wish_list_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
