@@ -5,8 +5,43 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1767108268027,
-      "tag": "0000_striped_cerebro",
+      "when": 1767143120991,
+      "tag": "0000_good_swordsman",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1767144131731,
+      "tag": "0001_daily_rage",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1767144233458,
+      "tag": "0002_silky_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1767145780903,
+      "tag": "0003_busy_machine_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1767146018447,
+      "tag": "0004_small_cyclops",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1767147223899,
+      "tag": "0005_pretty_vargas",
       "breakpoints": true
     }
   ]

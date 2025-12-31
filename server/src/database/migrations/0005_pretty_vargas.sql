@@ -1,0 +1,1 @@
+ALTER TABLE "product" ALTER COLUMN "on_spotlight" SET DEFAULT false;
