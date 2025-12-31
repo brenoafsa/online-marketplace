@@ -20,11 +20,23 @@ function App() {
   })
 
   return (
-    <div className='bg-amber-200'>
-      {query.data?.map((each: User) => (
-        <p className='p-2' key={each.id}>{each.name}: {each.username}: {each.phone}</p>
-      ))}
-    </div>
+    <>
+      <div className='bg-app-dark-gray text-white'>
+        {query.data?.map((each: User) => (
+          <p className='p-2' key={each.id}>{each.name}: {each.username}: {each.phone}</p>
+        ))}
+      </div>
+      <div className='bg-app-dark-gray text-white'>
+        {query.data?.map((each: User) => (
+          <p className='p-2' key={each.id}>{each.name}: {each.username}: {each.phone}</p>
+        ))}
+      </div>
+      <div className='bg-app-dark-gray text-white'>
+        {query.data?.map((each: User) => (
+          <p className='p-2' key={each.id}>{each.name}: {each.username}: {each.phone}</p>
+        ))}
+      </div>
+    </>
   )
 }
 
