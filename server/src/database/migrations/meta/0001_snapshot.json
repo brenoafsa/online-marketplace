@@ -1,6 +1,6 @@
 {
-  "id": "6902a0d3-05d6-4ca7-8248-252a67b67555",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f6a005df-5d24-41f2-890c-cb20fa57233e",
+  "prevId": "6902a0d3-05d6-4ca7-8248-252a67b67555",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -12,6 +12,30 @@
           "name": "id",
           "type": "text",
           "primaryKey": true,
+          "notNull": true
+        },
+        "street": {
+          "name": "street",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "neighborhood": {
+          "name": "neighborhood",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "latitude": {
+          "name": "latitude",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "longitude": {
+          "name": "longitude",
+          "type": "double precision",
+          "primaryKey": false,
           "notNull": true
         }
       },
@@ -122,10 +146,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "wish_list_product_wish_list_id_address_id_fk": {
-          "name": "wish_list_product_wish_list_id_address_id_fk",
+        "wish_list_product_wish_list_id_wish_list_id_fk": {
+          "name": "wish_list_product_wish_list_id_wish_list_id_fk",
           "tableFrom": "wish_list_product",
-          "tableTo": "address",
+          "tableTo": "wish_list",
           "columnsFrom": [
             "wish_list_id"
           ],
@@ -149,6 +173,38 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.purchase": {
+      "name": "purchase",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "total_price": {
+          "name": "total_price",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -287,6 +343,25 @@
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.wish_list": {
+      "name": "wish_list",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
