@@ -8,7 +8,9 @@ import { productTable } from "./product";
 export const purchaseTable = pgTable("purchase", {
   id: text('id').$defaultFn(() => createId()).primaryKey(),
   totalPrice: real('total_price').notNull(),
-  createdAt: timestamp('created_at').defaultNow()
+  createdAt: timestamp('created_at').defaultNow(),
+  userId: text('user_id').notNull().references(() => userTable.id, { onDelete: 'cascade' }),
+  addressId: text('address_id').notNull().references(() => addressTable.id)
 })
 
 export const purchaseRelations = relations(purchaseTable, ({ one, many }) => ({
@@ -19,6 +21,7 @@ export const purchaseRelations = relations(purchaseTable, ({ one, many }) => ({
 
 // Many-to-Many table (product-order)
 export const productOrderTable = pgTable("product_order", {
+    id: text('id').$defaultFn(() => createId()).primaryKey(),
     quantity: integer('quantity').notNull(),
     priceAtPurchase: real('price_at_purchase').notNull(),
     purchaseId: text("purchase_id")

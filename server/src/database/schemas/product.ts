@@ -18,7 +18,8 @@ export const productTable = pgTable("product", {
   onSpotlight: boolean('on_spotlight').default(false).notNull(),
   stars: real('stars').default(0),
   type: productTypeEnum('type').notNull(),
-  category: categoryEnum('category').notNull()
+  category: categoryEnum('category').notNull(),
+  creatorId: text('creator_id').notNull().references(() => userTable.id)
 }, (table) => [
   check("valid_percentage_check", sql`${table.salePercentage} BETWEEN 1 AND 100`),
   check("valid_stars_check", sql`${table.stars} BETWEEN 0 AND 5`)
