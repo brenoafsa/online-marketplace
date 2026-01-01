@@ -50,6 +50,10 @@ async function seed() {
 
   console.log('Users and addresses created.');
 
+  if (!user1 || !user2) {
+    throw new Error('Failed to create users, cannot seed products.');
+  }
+
   const [product1] = await db.insert(productTable).values({
     title: 'Livro de Ficção Científica',
     price: 49.9,
@@ -81,6 +85,32 @@ async function seed() {
   }).returning();
 
   console.log('Products created.');
+
+  const productsToInsert = [];
+  const productTypes = ['PHYSICAL', 'DIGITAL'];
+  const productCategories = ['COURSE', 'TEMPLATE', 'VIDEO', 'GAME', 'ASSET', 'AUDIO', 'SOFTWARE', 'E-BOOK'];
+  const userIds = [user1!.id, user2!.id];
+
+  for (let i = 0; i < 1000; i++) {
+    const randomType = productTypes[Math.floor(Math.random() * productTypes.length)] as 'PHYSICAL' | 'DIGITAL';
+    const randomCategory = productCategories[Math.floor(Math.random() * productCategories.length)] as 'COURSE' | 'TEMPLATE' | 'VIDEO' | 'GAME' | 'ASSET' | 'AUDIO' | 'SOFTWARE' | 'E-BOOK';
+    const randomCreatorId = userIds[Math.floor(Math.random() * userIds.length)];
+    const hasSale = Math.random() > 0.5;
+
+    productsToInsert.push({
+      title: `Produto ${i + 1}`,
+      price: parseFloat((Math.random() * 450 + 50).toFixed(2)),
+      salePercentage: hasSale ? Math.floor(Math.random() * 50) + 5 : null,
+      onSpotlight: Math.random() > 0.8,
+      type: randomType,
+      category: randomCategory,
+      creatorId: randomCreatorId!,
+    });
+  }
+
+  const insertedProducts = await db.insert(productTable).values(productsToInsert).returning();
+
+  console.log('1000 products created.');
 
   const [wishList1] = await db.insert(wishListTable).values({ userId: user1!.id }).returning();
   await db.insert(wishListProductTable).values([
