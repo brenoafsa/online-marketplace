@@ -1,4 +1,4 @@
-import { text, integer, real, boolean, pgTable, pgEnum, check } from "drizzle-orm/pg-core";
+import { text, integer, real, boolean, timestamp, pgTable, pgEnum, check } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
 import { relations, sql } from "drizzle-orm";
 import { userTable } from "./user";
@@ -17,6 +17,8 @@ export const productTable = pgTable("product", {
   purchaseCount: integer('purchase_count').default(0),
   onSpotlight: boolean('on_spotlight').default(false).notNull(),
   stars: real('stars').default(0),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
   type: productTypeEnum('type').notNull(),
   category: categoryEnum('category').notNull(),
   creatorId: text('creator_id').notNull().references(() => userTable.id)

@@ -19,6 +19,8 @@ CREATE TABLE "product" (
 	"purchase_count" integer DEFAULT 0,
 	"on_spotlight" boolean DEFAULT false NOT NULL,
 	"stars" real DEFAULT 0,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"type" "PRODUCT_TYPE" NOT NULL,
 	"category" "CATEGORY" NOT NULL,
 	"creator_id" text NOT NULL,
@@ -27,6 +29,7 @@ CREATE TABLE "product" (
 );
 --> statement-breakpoint
 CREATE TABLE "product_order" (
+	"id" text PRIMARY KEY NOT NULL,
 	"quantity" integer NOT NULL,
 	"price_at_purchase" real NOT NULL,
 	"purchase_id" text NOT NULL,
@@ -67,6 +70,7 @@ CREATE TABLE "user" (
 );
 --> statement-breakpoint
 CREATE TABLE "wish_list_product" (
+	"id" text PRIMARY KEY NOT NULL,
 	"wish_list_id" text NOT NULL,
 	"product_id" text NOT NULL
 );

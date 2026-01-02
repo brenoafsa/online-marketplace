@@ -91,7 +91,7 @@ async function seed() {
   const productCategories = ['COURSE', 'TEMPLATE', 'VIDEO', 'GAME', 'ASSET', 'AUDIO', 'SOFTWARE', 'E-BOOK'];
   const userIds = [user1!.id, user2!.id];
 
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 30; i++) {
     const randomType = productTypes[Math.floor(Math.random() * productTypes.length)] as 'PHYSICAL' | 'DIGITAL';
     const randomCategory = productCategories[Math.floor(Math.random() * productCategories.length)] as 'COURSE' | 'TEMPLATE' | 'VIDEO' | 'GAME' | 'ASSET' | 'AUDIO' | 'SOFTWARE' | 'E-BOOK';
     const randomCreatorId = userIds[Math.floor(Math.random() * userIds.length)];
@@ -108,7 +108,7 @@ async function seed() {
     });
   }
 
-  const insertedProducts = await db.insert(productTable).values(productsToInsert).returning();
+  await db.insert(productTable).values(productsToInsert).returning();
 
   console.log('1000 products created.');
 
