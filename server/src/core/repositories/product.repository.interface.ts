@@ -1,5 +1,5 @@
-import { Product } from '../entities/product.entity';
-import type { CreateProductDTO, UpdateProductDTO } from '../../application/dtos/product.dto';
+import { Product } from '@core/entities/product.entity';
+import type { CreateProductDTO, UpdateProductDTO } from '@application/dtos/product.dto';
 
 export interface IProductRepository {
   create(newProduct: CreateProductDTO): Promise<void>;
