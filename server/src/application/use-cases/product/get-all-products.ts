@@ -5,6 +5,6 @@ export class FindAllProductsUseCase {
   constructor(private productRepository: IProductRepository) {}
 
   async execute(): Promise<Product[]> {
-    return this.productRepository.findAll();
+    return await this.productRepository.findAll();
   }
 }
