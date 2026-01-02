@@ -7,8 +7,8 @@
     "dev": "bun --watch src/server.ts",
     "db:generate": "bunx drizzle-kit generate",
     "db:migrate": "docker exec -it bun-server bunx drizzle-kit migrate",
-    "db:seed": "docker exec -it bun-server bun run src/database/seed.ts",
-    "db:query": "docker exec -it bun-server bun run src/database/query.ts",
+    "db:seed": "docker exec -it bun-server bun run src/infrastructure/persistence/drizzle/seed.ts",
+    "db:query": "docker exec -it bun-server bun run src/infrastructure/persistence/drizzle/query.ts",
     "db:studio": "docker exec -it bun-server bunx drizzle-kit studio --host localhost",
     "db:command": "docker exec -it marketplace_db psql -U postgres -d online_marketplace"
   },
