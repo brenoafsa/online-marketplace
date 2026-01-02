@@ -1,46 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
   component: App,
 })
 
-interface User {
-  id: number;
-  name: string;
-  username: string;
-  phone: string;
-}
-
 function App() {
-
-  const query = useQuery<User[]>({ 
-    queryKey: ['users'],
-    queryFn: getUsers 
-  })
-
   return (
-    <>
-      <div className='bg-app-dark-gray text-white pt-18'>
-        {query.data?.map((each: User) => (
-          <p className='p-2' key={each.id}>{each.name}: {each.username}: {each.phone}</p>
-        ))}
-      </div>
-      <div className='bg-app-dark-gray text-white'>
-        {query.data?.map((each: User) => (
-          <p className='p-2' key={each.id}>{each.name}: {each.username}: {each.phone}</p>
-        ))}
-      </div>
-      <div className='bg-app-dark-gray text-white'>
-        {query.data?.map((each: User) => (
-          <p className='p-2' key={each.id}>{each.name}: {each.username}: {each.phone}</p>
-        ))}
-      </div>
-    </>
+    <Link to='/home'>
+      <div className='pt-18'>
+        HOME PAGE
+      </div>  
+    </Link>
   )
-}
-
-async function getUsers(): Promise<User[]> {
-  const res = await fetch('https://jsonplaceholder.typicode.com/users')
-  return res.json();
 }
