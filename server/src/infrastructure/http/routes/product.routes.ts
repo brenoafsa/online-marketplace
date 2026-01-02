@@ -1,11 +1,13 @@
 import { Router } from 'express';
-import { ProductController } from '../controllers/product.controller';
-import { ProductRepository } from '../../persistence/repositories/product.repository';
-import { CreateProductUseCase } from '../../../application/use-cases/product/create-product';
-import { FindAllProductsUseCase } from '../../../application/use-cases/product/get-all-products';
-import { FindProductByIdUseCase } from '../../../application/use-cases/product/get-product-by-id';
-import { UpdateProductUseCase } from '../../../application/use-cases/product/update-product';
-import { DeleteProductUseCase } from '../../../application/use-cases/product/delete-product';
+import { ProductController } from '@infrastructure/http/controllers/product.controller';
+import { ProductRepository } from '@infrastructure/persistence/repositories/product.repository';
+import {
+  CreateProductUseCase,
+  FindAllProductsUseCase,
+  FindProductByIdUseCase,
+  UpdateProductUseCase,
+  DeleteProductUseCase,
+} from '@application/use-cases/product';
 
 const productRouter = Router();
 

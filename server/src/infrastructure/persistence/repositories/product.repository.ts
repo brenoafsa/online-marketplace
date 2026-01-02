@@ -1,9 +1,9 @@
 import { and, desc, eq } from "drizzle-orm";
-import { db } from "../drizzle/index";
-import { productTable } from "../drizzle/schemas/product";
-import type { IProductRepository } from "../../../core/repositories/product.repository.interface";
-import { Product } from "../../../core/entities/product.entity";
-import type { CreateProductDTO, UpdateProductDTO } from "../../../application/dtos/product.dto";
+import { db } from "@infrastructure/persistence/drizzle/index";
+import { productTable } from "@infrastructure/persistence/drizzle/schemas/product";
+import type { IProductRepository } from "@core/repositories/product.repository.interface";
+import { Product } from "@core/entities/product.entity";
+import type { CreateProductDTO, UpdateProductDTO } from "@application/dtos/product.dto";
 
 export class ProductRepository implements IProductRepository {
     async create(product: CreateProductDTO): Promise<void> {

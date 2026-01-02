@@ -1,10 +1,12 @@
 import type { Request, Response } from 'express';
-import { FindAllProductsUseCase } from '../../../application/use-cases/product/get-all-products';
-import { FindProductByIdUseCase } from '../../../application/use-cases/product/get-product-by-id';
-import { CreateProductUseCase } from '../../../application/use-cases/product/create-product';
-import { UpdateProductUseCase } from '../../../application/use-cases/product/update-product';
-import { DeleteProductUseCase } from '../../../application/use-cases/product/delete-product';
-import { createProductSchema, updateProductSchema } from '../../../application/dtos/product.dto';
+import { createProductSchema, updateProductSchema } from '@application/dtos/product.dto';
+import {
+  CreateProductUseCase,
+  FindAllProductsUseCase,
+  FindProductByIdUseCase,
+  UpdateProductUseCase,
+  DeleteProductUseCase,
+} from '@application/use-cases/product';
 import { ZodError } from 'zod';
 
 export class ProductController {
