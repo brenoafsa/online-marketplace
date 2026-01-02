@@ -3,7 +3,7 @@ import { db } from "../drizzle/index";
 import { productTable } from "../drizzle/schemas/product";
 import type { IProductRepository } from "../../../core/repositories/product.repository.interface";
 import { Product } from "../../../core/entities/product.entity";
-import type { CreateProductDTO } from "../../../application/dtos/product.dto";
+import type { CreateProductDTO, UpdateProductDTO } from "../../../application/dtos/product.dto";
 
 export class ProductRepository implements IProductRepository {
     async create(product: CreateProductDTO): Promise<void> {
@@ -14,7 +14,7 @@ export class ProductRepository implements IProductRepository {
         const products = await db.select().from(productTable).orderBy(desc(productTable.createdAt));
 
         if (!products) {
-            throw new Error("Failed to get products. The database did not return records.");
+            throw new Error("Failed to find products. The database did not return records.");
         }
 
         return products.map(p => new Product(p));
@@ -38,9 +38,20 @@ export class ProductRepository implements IProductRepository {
         const [product] = await db.select().from(productTable).where(eq(productTable.id, id)).limit(1);
 
         if (!product) {
-            throw new Error("Failed to get product. The database did not return record.");
+            throw new Error("Failed to find product. The database did not return record.");
         }
 
         return new Product(product);
+    }
+
+    async update(id: string, changes: UpdateProductDTO): Promise<void> {
+        await db.update(productTable).set({
+            ...changes,
+            updatedAt: new Date()
+        }).where(eq(productTable.id, id));
+    }
+
+    async delete(id: string): Promise<void> {
+        await db.delete(productTable).where(eq(productTable.id, id));
     }
 }

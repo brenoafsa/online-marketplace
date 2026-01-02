@@ -18,7 +18,7 @@ export const productTable = pgTable("product", {
   onSpotlight: boolean('on_spotlight').default(false).notNull(),
   stars: real('stars').default(0),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  updatedAt: timestamp('updated_at'),
   type: productTypeEnum('type').notNull(),
   category: categoryEnum('category').notNull(),
   creatorId: text('creator_id').notNull().references(() => userTable.id)
@@ -33,6 +33,3 @@ export const productRelations = relations(productTable, ({ one, many }) => ({
   reviews: many(reviewTable),
   itens: many(productOrderTable)
 }))
-
-export type Product = typeof productTable.$inferSelect;
-export type NewProduct = typeof productTable.$inferInsert;

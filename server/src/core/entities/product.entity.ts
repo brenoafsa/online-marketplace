@@ -1,3 +1,4 @@
+// Define object to always have the same structure
 export class Product {
     id: string;
     title: string;
@@ -12,6 +13,7 @@ export class Product {
     category: "GAME" | "ASSET" | "COURSE" | "AUDIO" | "TEMPLATE" | "SOFTWARE" | "E-BOOK" | "VIDEO";
     creatorId: string;
 
+    // When invoked via new Product(data) guarantees that data will provide all the required data to attribute the necessary data
     constructor(props: {
         id: string;
         title: string;
