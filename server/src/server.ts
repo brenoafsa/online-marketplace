@@ -1,7 +1,7 @@
 import express from 'express'
 import type { Request, Response } from 'express'
 import cors from 'cors';
-import { productRouter } from '@infrastructure/http/routes/product.routes';
+import { router } from '@infrastructure/http/routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 
@@ -35,7 +35,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send('hello world');
 })
 
-app.use('/api', productRouter);
+app.use('/api', router);
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Example app listening on port ${port}`)

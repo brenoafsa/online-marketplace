@@ -11,6 +11,6 @@ export class CreateProductUseCase {
         throw new Error("Product with this title already exists for this creator.");
     }
 
-    await this.productRepository.create(data);
+    return await this.productRepository.create(data);
   }
 }
