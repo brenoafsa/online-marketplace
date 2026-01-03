@@ -18,7 +18,7 @@ export const userTable = pgTable("user", {
   password: text('password').notNull(),
   phone: text('phone').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  updatedAt: timestamp('updated_at'),
   role: roleEnum('role').default("CUSTOMER"),
   language: languageEnum('language').default("EN")
 })
