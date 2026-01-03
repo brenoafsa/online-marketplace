@@ -49,9 +49,9 @@ export default function Header() {
             <Link to='/' className='h-8 w-8 flex items-center justify-center hover:cursor-pointer text-white'>
               <UserIcon className="h-6 w-6 text-white stroke-1.5" />
             </Link>
-            <button className='inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm text-white bg-[linear-gradient(90deg,#8c59c0,#d9269d)] hover:opacity-90 hover:cursor-pointer h-10 w-20 px-4 py-2 font-display font-semibold'>
+            <Link to='/signup' className='inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm text-white bg-[linear-gradient(90deg,#8c59c0,#d9269d)] hover:opacity-90 hover:cursor-pointer h-10 w-20 px-4 py-2 font-display font-semibold'>
               Entrar
-            </button>
+            </Link>
           </div>
         </div>
       </div>
