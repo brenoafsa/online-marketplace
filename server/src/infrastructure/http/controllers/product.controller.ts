@@ -59,7 +59,10 @@ export class ProductController {
       const products = await this.findAllProductsUseCase.execute();
       return res.status(200).json(products);
     } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message });
+      }
+      return res.status(500).json({ message: 'An unexpected error occurred.' });
     }
   }
 

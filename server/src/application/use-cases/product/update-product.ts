@@ -6,6 +6,6 @@ export class UpdateProductUseCase {
 
     async execute(id: string, changes: UpdateProductDTO): Promise<void> {
         await this.productRepository.findById(id);
-        await this.productRepository.update(id, changes);
+        return await this.productRepository.update(id, changes);
     }
 }
