@@ -4,6 +4,7 @@ import { EnvelopeIcon, EyeIcon, EyeSlashIcon, LockClosedIcon } from "@heroicons/
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
 import { useSignIn } from "../hooks/useSignIn";
 import type { FormData } from "../api";
+import { Spinner } from "@/components/ui/spinner";
 
 export function SignInPage() {
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
@@ -44,8 +45,8 @@ export function SignInPage() {
               {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
             </div>
           </div>
-          <button type="submit" disabled={isPending} className="w-full h-12 bg-app-pink text-white py-2 rounded-md hover:bg-app-pink/70 mt-6 disabled:bg-app-pink/40">
-            {isPending ? "Entrando..." : "Entrar"}
+          <button type="submit" disabled={isPending} className="flex justify-center items-center w-full h-12 bg-app-pink text-white font-semibold py-2 rounded-md hover:bg-app-pink/70 mt-6 disabled:bg-app-pink/40">
+            {isPending ? <Spinner className="w-5 h-5"/> : "Entrar"}
           </button>
           <p className="text-center text-sm text-gray-400 mt-4">
             Não tem uma conta? <Link to="/signup" className="font-semibold text-app-pink hover:underline">Cadastre-se</Link>

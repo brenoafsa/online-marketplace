@@ -92,10 +92,10 @@ export function RegisterSecondStep({ onBack, isSubmitting }: RegisterSecondStepP
                 </div>
             </div>
             <div className="flex gap-4 mt-4">
-                <button type="button" onClick={onBack} className="w-full h-12 bg-app-light-gray text-white py-2 rounded-md hover:bg-app-light-gray/80">
+                <button type="button" onClick={onBack} className="w-full h-12 bg-app-light-gray text-white font-semibold py-2 rounded-md hover:bg-app-light-gray/80">
                     Voltar
                 </button>
-                <button type="submit" disabled={isSubmitting} className="flex justify-center items-center gap-2 w-full h-12 bg-app-pink text-white py-2 rounded-md hover:bg-app-pink/70">
+                <button type="submit" disabled={isSubmitting} className="flex justify-center items-center gap-2 w-full h-12 bg-app-pink text-white font-semibold py-2 rounded-md hover:bg-app-pink/70">
                     {isSubmitting ? <Spinner className="w-5 h-5"/> : "Criar Conta"}
                 </button>
             </div>
