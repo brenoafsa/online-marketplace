@@ -13,7 +13,7 @@ export class CreateUserUseCase {
         }
 
         if (data.role == "SELLER") {
-            throw new Error("Not allowed to create seller via sign up.")
+            throw new Error("Not allowed to create seller via sign up.");
         }
 
         const salt = await genSalt(10);

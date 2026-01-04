@@ -7,7 +7,6 @@ import type {
     UpdateUserUseCase,
     DeleteUserUseCase
 } from "@application/use-cases/user";
-import type { User } from "@core/entities/user.entity";
 import type { Request, Response } from "express";
 import { ZodError } from "zod";
 
