@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { signInUser, type FormData, formSchema } from "../api";
+import { toast } from "sonner";
 
 export function useSignIn() {
   const navigate = useNavigate();
@@ -14,10 +15,11 @@ export function useSignIn() {
   const { mutate, isPending } = useMutation({
     mutationFn: signInUser,
     onSuccess: () => {
+      toast.success("Login concluído!");
       navigate({ to: "/home" });
     },
     onError: (error) => {
-      alert(`Erro ao fazer login: ${error.message}`);
+      toast.warning(error.message);
     },
   });
 

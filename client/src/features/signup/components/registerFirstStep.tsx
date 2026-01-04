@@ -89,7 +89,7 @@ export function RegisterFirstStep({ onContinue }: { onContinue: () => void }) {
                     {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
                 </div>
             </div>
-            <button onClick={onContinue} className="w-full h-12 bg-app-pink text-white py-2 rounded-md hover:bg-app-pink/70 mt-4">
+            <button onClick={onContinue} className="w-full h-12 bg-app-pink text-white font-semibold py-2 rounded-md hover:bg-app-pink/70 mt-4">
                 Continuar
             </button>
         </div>

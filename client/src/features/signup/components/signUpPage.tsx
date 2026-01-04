@@ -51,7 +51,7 @@ export function SignUpPage() {
           </div>
           <div className="flex justify-center items-center text-[1rem] font-semibold gap-1 mt-4">
             <p className="text-app-light-gray">Já tem uma conta?</p>
-            <Link to="/home" className="text-app-pink hover:text-app-pink/70">Entrar</Link>
+            <Link to="/signin" className="text-app-pink hover:text-app-pink/70">Entrar</Link>
           </div>
         </form>
       </div>

@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Header from '@/components/layout/Header'
+import { Toaster } from '@/components/ui/sonner'
 
 const queryClient = new QueryClient()
 
@@ -12,6 +13,7 @@ export const Route = createRootRoute({
       <Header/>
       <QueryClientProvider client={queryClient}>
         <Outlet />
+        <Toaster />
       </QueryClientProvider>
       <TanStackDevtools
         config={{
