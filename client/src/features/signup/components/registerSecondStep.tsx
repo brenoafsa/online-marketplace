@@ -1,4 +1,3 @@
-import React from "react";
 import {
     InputGroup,
     InputGroupInput,
@@ -15,18 +14,22 @@ import {
     LanguageIcon,
     MapPinIcon
 } from "@heroicons/react/24/outline";
+import { Spinner } from "@/components/ui/spinner"
+import { useFormContext } from "react-hook-form";
+import { type FormData } from "../api";
 
 interface RegisterSecondStepProps {
   onBack: () => void;
-  onCreateAccount: () => void;
+  isSubmitting: boolean;
 }
 
-export function RegisterSecondStep({ onBack, onCreateAccount }: RegisterSecondStepProps) {
-    const [language, setLanguage] = React.useState("pt-BR");
+export function RegisterSecondStep({ onBack, isSubmitting }: RegisterSecondStepProps) {
+    const { register, setValue, watch, formState: { errors } } = useFormContext<FormData>();
+    const language = watch("language");
 
     const languageLabels: { [key: string]: string } = {
-        "pt-BR": "Português Brasileiro",
-        "en-US": "Inglês",
+        "BR": "Português Brasileiro",
+        "EN": "Inglês",
     };
     
     return (
@@ -47,9 +50,9 @@ export function RegisterSecondStep({ onBack, onCreateAccount }: RegisterSecondSt
                             </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width) bg-app-dark-gray text-white p-2 rounded-md border border-app-light-gray">
-                            <DropdownMenuRadioGroup value={language} onValueChange={setLanguage}>
-                                <DropdownMenuRadioItem value="pt-BR" className="bg-app-dark-gray hover:bg-gray-600 p-2 rounded-sm outline-none hover:cursor-pointer">Português Brasileiro</DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="en-US" className="bg-app-dark-gray hover:bg-gray-600 p-2 rounded-sm outline-none hover:cursor-pointer">Inglês</DropdownMenuRadioItem>
+                            <DropdownMenuRadioGroup value={language} onValueChange={(value) => setValue("language", value)}>
+                                <DropdownMenuRadioItem value="BR" className="bg-app-dark-gray hover:bg-gray-600 p-2 rounded-sm outline-none hover:cursor-pointer">Português Brasileiro</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="EN" className="bg-app-dark-gray hover:bg-gray-600 p-2 rounded-sm outline-none hover:cursor-pointer">Inglês</DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -57,39 +60,43 @@ export function RegisterSecondStep({ onBack, onCreateAccount }: RegisterSecondSt
 
                 <div className="md:col-span-2">
                     <InputGroup className="h-12">
-                        <InputGroupInput className="text-white" placeholder="Rua"/>
+                        <InputGroupInput {...register("street")} className="text-white" placeholder="Rua"/>
                         <InputGroupAddon>
                             <MapPinIcon className="h-6 w-6 text-app-light-gray stroke-1.5" />
                         </InputGroupAddon>
                     </InputGroup>
+                    {errors.street && <p className="text-red-500 text-sm mt-1">{errors.street.message}</p>}
                 </div>
 
                 <div className="md:col-span-2">
                     <InputGroup className="h-12">
-                        <InputGroupInput className="text-white" placeholder="Bairro"/>
+                        <InputGroupInput {...register("neighborhood")} className="text-white" placeholder="Bairro"/>
                         <InputGroupAddon>
                             <MapPinIcon className="h-6 w-6 text-app-light-gray stroke-1.5" />
                         </InputGroupAddon>
                     </InputGroup>
+                    {errors.neighborhood && <p className="text-red-500 text-sm mt-1">{errors.neighborhood.message}</p>}
                 </div>
 
                 <div className="md:col-span-2">
                     <InputGroup className="h-12">
-                        <InputGroupInput className="text-white" placeholder="Latitude"/>
+                        <InputGroupInput {...register("latitude")} className="text-white" placeholder="Latitude"/>
                     </InputGroup>
+                    {errors.latitude && <p className="text-red-500 text-sm mt-1">{errors.latitude.message}</p>}
                 </div>
                 <div className="md:col-span-2">
                     <InputGroup className="h-12">
-                        <InputGroupInput className="text-white" placeholder="Longitude"/>
+                        <InputGroupInput {...register("longitude")} className="text-white" placeholder="Longitude"/>
                     </InputGroup>
+                    {errors.longitude && <p className="text-red-500 text-sm mt-1">{errors.longitude.message}</p>}
                 </div>
             </div>
             <div className="flex gap-4 mt-4">
-                <button onClick={onBack} className="w-full h-12 bg-app-light-gray text-white py-2 rounded-md hover:bg-app-light-gray/80">
+                <button type="button" onClick={onBack} className="w-full h-12 bg-app-light-gray text-white py-2 rounded-md hover:bg-app-light-gray/80">
                     Voltar
                 </button>
-                <button onClick={onCreateAccount} className="w-full h-12 bg-app-pink text-white py-2 rounded-md hover:bg-app-pink/70">
-                    Criar Conta
+                <button type="submit" disabled={isSubmitting} className="flex justify-center items-center gap-2 w-full h-12 bg-app-pink text-white py-2 rounded-md hover:bg-app-pink/70">
+                    {isSubmitting ? <Spinner className="w-5 h-5"/> : "Criar Conta"}
                 </button>
             </div>
         </div>

@@ -12,46 +12,53 @@ import {
     EyeSlashIcon,
     PhoneIcon
 } from "@heroicons/react/24/outline";
+import { useFormContext } from "react-hook-form";
+import { type FormData } from "../api";
 
 export function RegisterFirstStep({ onContinue }: { onContinue: () => void }) {
     const [showPassword, setShowPassword] = React.useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState<boolean>(false);
+    const { register, formState: { errors } } = useFormContext<FormData>();
 
     return (
         <div className="bg-app-dark-blue w-full max-w-2xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-1">
                     <InputGroup className="h-12">
-                        <InputGroupInput className="text-white" placeholder="Nome"/>
+                        <InputGroupInput {...register("firstName")} className="text-white" placeholder="Nome"/>
                         <InputGroupAddon>
                             <UserIcon className="h-6 w-6 text-app-light-gray stroke-1.5" />
                         </InputGroupAddon>
                     </InputGroup>
+                    {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>}
                 </div>
                 <div className="md:col-span-1">
                     <InputGroup className="h-12">
-                        <InputGroupInput className="text-white" placeholder="Sobrenome"/>
+                        <InputGroupInput {...register("lastName")} className="text-white" placeholder="Sobrenome"/>
                     </InputGroup>
+                    {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
                 </div>
                 <div className="md:col-span-2">
                     <InputGroup className="h-12">
-                        <InputGroupInput className="text-white" placeholder="Email"/>
+                        <InputGroupInput {...register("email")} className="text-white" placeholder="Email"/>
                         <InputGroupAddon>
                             <EnvelopeIcon className="h-6 w-6 text-app-light-gray stroke-1.5" />
                         </InputGroupAddon>
                     </InputGroup>
+                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                 </div>
                 <div className="md:col-span-2">
                     <InputGroup className="h-12">
-                        <InputGroupInput className="text-white" placeholder="Telefone"/>
+                        <InputGroupInput {...register("phone")} className="text-white" placeholder="Telefone"/>
                         <InputGroupAddon>
                             <PhoneIcon className="h-6 w-6 text-app-light-gray stroke-1.5" />
                         </InputGroupAddon>
                     </InputGroup>
+                    {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
                 </div>
                 <div className="md:col-span-2">
                     <InputGroup className="h-12">
-                        <InputGroupInput type={showPassword ? "text" : "password"} className="text-white" placeholder="Crie uma senha"/>
+                        <InputGroupInput {...register("password")} type={showPassword ? "text" : "password"} className="text-white" placeholder="Crie uma senha"/>
                         <InputGroupAddon>
                             <LockClosedIcon className="h-6 w-6 text-app-light-gray stroke-1.5" />
                         </InputGroupAddon>
@@ -63,10 +70,11 @@ export function RegisterFirstStep({ onContinue }: { onContinue: () => void }) {
                         )}
                         </InputGroupAddon>
                     </InputGroup>
+                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                 </div>
                 <div className="md:col-span-2">
                     <InputGroup className="h-12">
-                        <InputGroupInput type={showConfirmPassword ? "text" : "password"} className="text-white" placeholder="Confirme sua senha"/>
+                        <InputGroupInput {...register("confirmPassword")} type={showConfirmPassword ? "text" : "password"} className="text-white" placeholder="Confirme sua senha"/>
                         <InputGroupAddon>
                             <LockClosedIcon className="h-6 w-6 text-app-light-gray stroke-1.5" />
                         </InputGroupAddon>
@@ -78,6 +86,7 @@ export function RegisterFirstStep({ onContinue }: { onContinue: () => void }) {
                         )}
                         </InputGroupAddon>
                     </InputGroup>
+                    {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
                 </div>
             </div>
             <button onClick={onContinue} className="w-full h-12 bg-app-pink text-white py-2 rounded-md hover:bg-app-pink/70 mt-4">
