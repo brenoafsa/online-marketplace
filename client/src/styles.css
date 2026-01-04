@@ -18,6 +18,19 @@ code {
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+::selection {
+  background-color: #60a5fa;
+  color: white;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 :root {
   --app-black: oklch(0.1615 0.0105 285.17);
   --app-dark-gray: oklch(0.2079 0.0138 285.14);
