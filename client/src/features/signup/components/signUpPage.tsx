@@ -1,32 +1,14 @@
 import React from "react";
 import { RegisterFirstStep } from "./registerFirstStep";
 import { RegisterSecondStep } from "./registerSecondStep";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { createUser, type FormData, formSchema } from "../api";
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { type FormData } from "../api";
+import { FormProvider } from "react-hook-form";
+import { useSignUp } from "../hooks/useSignUp";
 
 export function SignUpPage() {
   const [step, setStep] = React.useState<1 | 2>(1);
-  const navigate = useNavigate();
-  const validation = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      role: "CUSTOMER",
-      language: "BR",
-    }
-  })
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: createUser,
-    onSuccess: () => {
-      navigate({ to: "/home"})
-    },
-    onError: (error) => {
-      alert(`Erro ao criar conta: ${error.message}`)
-    }
-  });
+  const { mutate, trigger, handleSubmit, isPending, ...formMethods  } = useSignUp();
 
   const onSubmit = (data: FormData) => {
     mutate(data);
@@ -34,16 +16,16 @@ export function SignUpPage() {
 
   const handleContinue = async () => {
     const fields: (keyof FormData)[] = ["firstName", "lastName", "email", "phone", "password", "confirmPassword"];
-    const isValid = await validation.trigger(fields);
+    const isValid = await trigger(fields);
     if (isValid) {
       setStep(2);
     }
   }
 
   return (
-    <FormProvider {...validation}>
+    <FormProvider {...formMethods} trigger={trigger} handleSubmit={handleSubmit}>
       <div className='flex justify-center items-center bg-app-dark-gray w-screen h-screen pt-18'>
-        <form onSubmit={validation.handleSubmit(onSubmit)} className="border border-white rounded-lg p-8 min-w-125 min-h-150">
+        <form onSubmit={handleSubmit(onSubmit)} className="border border-white rounded-lg p-8 min-w-125 min-h-150">
           {step === 1 && (
             <>
               <div className="text-center mb-6">
