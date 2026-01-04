@@ -1,3 +1,5 @@
+import api from "@/lib/http";
+
 export interface Product {
     id: string;
     title: string;
@@ -14,7 +16,6 @@ export interface Product {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const res = await fetch('http://localhost:3001/api/products')
-  if (!res.ok) throw new Error('Error to fetch products');
-  return res.json();
+  const response = await api.get('/products');
+  return response.data;
 }
