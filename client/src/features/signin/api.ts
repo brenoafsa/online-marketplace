@@ -10,7 +10,7 @@ export type FormData = z.infer<typeof formSchema>;
 
 export async function signInUser(data: FormData): Promise<void> {
     try {
-        await api.post('/auth', data);
+        await api.post('/signin', data);
     } catch (error: any) {
         const message = error.response?.data?.message || 'Falha ao criar usuário';
         throw new Error(message);

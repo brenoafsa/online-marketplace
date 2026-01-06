@@ -1,4 +1,7 @@
-import type { AuthenticateUserUseCase } from "@application/use-cases/auth/authenticate-user";
+import type {
+    AuthenticateUserUseCase,
+    ValidateUserSessionUserCase
+} from "@application/use-cases/auth/index";
 import type { Request, Response } from "express";
 import { authSchema } from "@application/dtos/auth.dto";
 import { ZodError } from "zod";
@@ -6,6 +9,7 @@ import { ZodError } from "zod";
 export class AuthController {
     constructor (
         private AuthenticateUserUseCase: AuthenticateUserUseCase,
+        private ValidateUserSessionUserCase: ValidateUserSessionUserCase,
     ) {}
 
     async auth(req: Request, res: Response): Promise<Response> {
@@ -28,6 +32,7 @@ export class AuthController {
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
                 path: "/api",
+                maxAge: 1 * 60 * 1000,
             });
 
             return res.status(200).json({ message: "Authenticated successfully" });
@@ -46,6 +51,25 @@ export class AuthController {
             }
             return res.status(500).json({ message: 'An unexpected error occurred.' });
 
+        }
+    }
+
+    async validateSession(req: Request, res: Response): Promise<Response> {
+        try {
+            const tokenDecoded = req.user
+
+            if (!tokenDecoded) {
+                return res.status(403).json({ message: 'Forbidden: No token provided' });
+            }
+
+            await this.ValidateUserSessionUserCase.execute(tokenDecoded.id)
+
+            return res.status(200).json({ message: "Authorized." });
+        } catch (error) {
+            if (error instanceof Error) {
+                return res.status(403).json({ message: 'Forbidden: Invalid token.' });
+            }
+            return res.status(500).json({ message: 'An unexpected error occurred.' });
         }
     }
 }

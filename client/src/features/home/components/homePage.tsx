@@ -4,7 +4,10 @@ import { type Product, getProducts } from '../api'
 export function HomePage() {
   const { data, isPending, error} = useQuery<Product[]>({ 
     queryKey: ['products'],
-    queryFn: getProducts 
+    queryFn: getProducts,
+    staleTime: Infinity,
+    refetchInterval: 1000 * 30,
+    refetchIntervalInBackground: false,
   })
 
   if (isPending) {

@@ -24,7 +24,7 @@ export type FormData = z.infer<typeof formSchema>;
 export async function createUser(data: FormData): Promise<void> {
     const { confirmPassword, ...apiData} = data;
     try {
-        await api.post('/user', apiData);
+        await api.post('/signup', apiData);
     } catch (error: any) {
         const message = error.response?.data?.message || 'Falha ao criar usuário';
         throw new Error(message);

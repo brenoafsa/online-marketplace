@@ -2,6 +2,7 @@ import type { AuthUserDTO } from "@application/dtos/auth.dto";
 import type { IUserRepository } from "@core/repositories/user.repository.interface";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import 'dotenv/config';
 
 export class AuthenticateUserUseCase {
     constructor(private UserRepository: IUserRepository) {}
@@ -19,9 +20,17 @@ export class AuthenticateUserUseCase {
             throw new Error("Invalid credentials.");
         }
 
-        const token = sign({}, "your-jwt-secret", {
+        const secret = process.env.JWT_SECRET;
+
+        if (!secret) {
+            throw new Error("JWT secret is not defined.");
+        }
+
+        await this.UserRepository.update(user.id, { lastLogIn: new Date() });
+
+        const token = sign({ id: user.id }, secret, {
             subject: user.id,
-            expiresIn: "5m",
+            expiresIn: "1m",
         });
 
         return token;

@@ -31,7 +31,7 @@ const userController = new UserController(
   createAddressUseCase
 );
 
-userRouter.post('/user', (req, res) => userController.create(req, res));
+userRouter.post('/signup', (req, res) => userController.create(req, res));
 userRouter.get('/users', (req, res) => userController.findAll(req, res));
 userRouter.get('/user/:id', (req, res) => userController.findById(req, res));
 userRouter.patch('/user/:id', (req, res) => userController.update(req, res));

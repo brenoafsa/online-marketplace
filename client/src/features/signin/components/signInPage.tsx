@@ -15,7 +15,7 @@ export function SignInPage() {
   };
 
   return (
-      <div className='flex justify-center items-center bg-app-dark-gray w-screen h-screen pt-18'>
+      <div className='flex justify-center items-center bg-app-dark-gray w-screen h-screen'>
         <form onSubmit={handleSubmit(onSubmit)} className="border border-white rounded-lg p-8 min-w-96">
           <h1 className="text-white text-3xl font-bold mb-6 text-center">Login</h1>
           <div className="space-y-4">

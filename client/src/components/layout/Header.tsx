@@ -1,9 +1,19 @@
 import React from 'react';
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { UserIcon, ShoppingCartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import api from '@/lib/http';
 
 export default function Header() {
   const [isItemOnCart] = React.useState<boolean>(false);
+  const navigate = useNavigate()
+  const handleLogout = async () => {
+    try {
+      await api.get('/logout')
+      navigate({ to: '/signin' })
+    } catch (error) {
+      console.error('Falha ao deslogar')
+    }
+  }
 
   return (
     <div className='fixed top-0 left-0 w-full z-50 bg-app-black/90 backdrop-blur'>
@@ -49,9 +59,9 @@ export default function Header() {
             <Link to='/' className='h-8 w-8 flex items-center justify-center hover:cursor-pointer text-white'>
               <UserIcon className="h-6 w-6 text-white stroke-1.5" />
             </Link>
-            <Link to='/signin' className='inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm text-white bg-[linear-gradient(90deg,#8c59c0,#d9269d)] hover:opacity-90 hover:cursor-pointer h-10 w-20 px-4 py-2 font-display font-semibold'>
-              Entrar
-            </Link>
+            <button onClick={handleLogout} className='inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm text-white bg-[linear-gradient(90deg,#8c59c0,#d9269d)] hover:opacity-90 hover:cursor-pointer h-10 w-20 px-4 py-2 font-display font-semibold'>
+              Logout
+            </button>
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ export function SignUpPage() {
 
   return (
     <FormProvider {...formMethods} trigger={trigger} handleSubmit={handleSubmit}>
-      <div className='flex justify-center items-center bg-app-dark-gray w-screen h-screen pt-18'>
+      <div className='flex justify-center items-center bg-app-dark-gray w-screen h-screen'>
         <form onSubmit={handleSubmit(onSubmit)} className="border border-white rounded-lg p-8 min-w-125 min-h-150">
           {step === 1 && (
             <>

@@ -1,6 +1,7 @@
 import express from 'express'
 import type { Request, Response } from 'express'
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { router } from '@infrastructure/http/routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
@@ -30,6 +31,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(cors({ origin: `http://localhost:3000`, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/', (req: Request, res: Response) => {
   res.send('hello world');
