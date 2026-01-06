@@ -50,17 +50,25 @@ export class UserController {
                 language,
             });
             
-            const createdUserId = await this.createUserUseCase.execute(userData);
+            const createdUser= await this.createUserUseCase.execute(userData);
 
             const addressData = {
                 street,
                 neighborhood,
                 latitude,
                 longitude,
-                userId: createdUserId
+                userId: createdUser.id
             };
 
             await this.createAddressUseCase.execute(addressData);
+
+            res.cookie("token", createdUser.token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                path: "/api",
+                maxAge: 1 * 60 * 1000,
+            });
 
             return res.status(201).json({ message: 'User created successfully.' });
         } catch (error) {

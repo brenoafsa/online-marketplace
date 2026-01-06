@@ -1,3 +1,4 @@
+import { isCuid } from '@paralleldrive/cuid2';
 import { z } from 'zod';
 
 export const createUserSchema = z.object({
@@ -6,6 +7,7 @@ export const createUserSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
   phone: z.string().min(1, 'Phone is required'),
+  lastLogIn: z.date().optional(),
   role: z.enum(['CUSTOMER', 'SELLER']),
   language: z.enum(['BR', 'EN']),
 });
@@ -20,6 +22,16 @@ export const updateUserSchema = z.object({
   phone: z.string().min(1, 'Phone is required').optional(),
   role: z.enum(['CUSTOMER', 'SELLER']).optional(),
   language: z.enum(['BR', 'EN']).optional(),
+  lastLogIn: z.date().optional(),
 }).strict();
 
 export type UpdateUserDTO = z.infer<typeof updateUserSchema>;
+
+export const signUpSchema = z.object({
+  id: z.string().min(1, 'Creator ID is required').min(24).max(24).refine(isCuid, {
+    message: "Creator ID must be a valid Cuid2."
+  }),
+  token: z.string()
+})
+
+export type SignUpDTO = z.infer<typeof signUpSchema>;

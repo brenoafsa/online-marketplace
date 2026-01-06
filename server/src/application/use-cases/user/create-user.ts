@@ -1,11 +1,12 @@
 import type { IUserRepository } from "@core/repositories/user.repository.interface";
-import type { CreateUserDTO } from "@application/dtos/user.dto";
+import type { CreateUserDTO, SignUpDTO } from "@application/dtos/user.dto";
 import { genSalt, hash } from "bcrypt";
+import { sign } from "jsonwebtoken";
 
 export class CreateUserUseCase {
     constructor(private UserRepository: IUserRepository) {}
 
-    async execute(data: CreateUserDTO): Promise<string> {
+    async execute(data: CreateUserDTO): Promise<SignUpDTO> {
         const existingUser = await this.UserRepository.findByEmail(data.email);
 
         if (existingUser) {
@@ -18,7 +19,24 @@ export class CreateUserUseCase {
 
         const salt = await genSalt(10);
         data.password = await hash(data.password, salt);
+        data.lastLogIn = new Date();
 
-        return await this.UserRepository.create(data);
+        const secret = process.env.JWT_SECRET;
+
+        if (!secret) {
+            throw new Error("JWT secret is not defined.");
+        }
+
+        const userId = await this.UserRepository.create(data);
+
+        const token = sign({ id: userId }, secret, {
+            subject: userId,
+            expiresIn: "1m",
+        });
+
+        return {
+            id: userId,
+            token: token
+        };
     }
 }

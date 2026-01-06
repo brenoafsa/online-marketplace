@@ -7,6 +7,7 @@ export class User {
     phone: string;
     createdAt: Date | null;
     updatedAt: Date | null;
+    lastLogIn: Date | null;
     role: "CUSTOMER" | "SELLER";
     language: "BR" | "EN";
     address: {
@@ -25,6 +26,7 @@ export class User {
         phone: string;
         createdAt: Date | null;
         updatedAt: Date | null;
+        lastLogIn: Date | null;
         role: "CUSTOMER" | "SELLER";
         language: "BR" | "EN";
         address: {
@@ -42,6 +44,7 @@ export class User {
         this.phone = props.phone;
         this.createdAt = props.createdAt;
         this.updatedAt = props.updatedAt;
+        this.lastLogIn = props.lastLogIn;
         this.role = props.role;
         this.language = props.language;
         this.address = props.address;
