@@ -116,7 +116,7 @@
 
 /**
  * @swagger
- * /api/user:
+ * /api/signup:
  *   post:
  *     summary: Create a new user
  *     tags: [Users]
