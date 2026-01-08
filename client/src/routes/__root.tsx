@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
 import { createContext, useContext } from 'react'
 import { Toaster } from '@/components/ui/sonner'
 import api from '@/lib/http'
@@ -75,8 +76,8 @@ export const Route = createRootRoute({
       <AuthContext.Provider value={auth}>
         <QueryClientProvider client={queryClient}>
           {!isPublicRoute && <Header />}
-          
           <Outlet />
+          {!isPublicRoute && <Footer/>}
           <Toaster />
           
           <TanStackDevtools

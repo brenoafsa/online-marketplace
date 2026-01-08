@@ -18,12 +18,12 @@ export default function Header() {
   return (
     <div className='fixed top-0 left-0 w-full z-50 bg-app-black/90 backdrop-blur'>
       <div className='container mx-auto'>
-        <div className="flex h-18 items-center justify-between gap-4">
+        <div className="flex px-32 h-18 items-center justify-between gap-4">
           <Link to='/'>
             <span className='flex items-center gap-2'>
               <div className='relative'>
-                <span className='font-display text-2xl font-bold text-app-purple neon-text'>GEEK</span>
-                <span className='font-display text-2xl font-bold text-white neon-text'>HUB</span>
+                <span className='font-display text-2xl font-bold text-app-purple'>GEEK</span>
+                <span className='font-display text-2xl font-bold text-app-blue'>HUB</span>
               </div>  
             </span>
           </Link>
