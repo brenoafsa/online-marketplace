@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { type Product, getProducts } from '../api'
+import { type Product, type ProductsResponse, getProducts } from '../api'
 
 export function HomePage() {
-  const { data, isPending, error} = useQuery<Product[]>({ 
+  const { data, isPending, error} = useQuery<ProductsResponse>({ 
     queryKey: ['products'],
     queryFn: getProducts,
     staleTime: Infinity,
@@ -19,12 +19,12 @@ export function HomePage() {
   }
 
   return (
-    <>
-      <div className='bg-app-dark-gray text-white pt-18'>
-        {data?.map((each: Product) => (
+    <div className='bg-app-dark-gray flex w-full h-full'>
+      <div className='text-white pt-18'>
+        {data?.products.map((each: Product) => (
           <p className='p-2' key={each.id}>{each.title}: R$ {each.price} - {each.onSpotlight.toString()}</p>
         ))}
       </div>
-    </>
+    </div>
   )
 }

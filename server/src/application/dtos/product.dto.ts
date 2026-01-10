@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isCuid } from '@paralleldrive/cuid2';
+import { Product } from '@core/entities/product.entity';
 
 export const createProductSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -24,3 +25,24 @@ export const updateProductSchema = z.object({
 });
 
 export type UpdateProductDTO = z.infer<typeof updateProductSchema>;
+
+export interface FindProductsParams {
+  page: number;
+  limit: number;
+  sort: SortTypes;
+}
+
+export type SortTypes = 'asc' | 'desc' | 'priceAsc' | 'priceDesc'
+
+export interface FindProductsResponse {
+  page: number,
+  total: number,
+  from: number,
+  to: number,
+  products: Product[]
+}
+
+export interface FindProductsRepository {
+  products: Product[],
+  total: number
+}

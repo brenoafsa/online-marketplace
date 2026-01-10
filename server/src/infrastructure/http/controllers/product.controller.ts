@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createProductSchema, updateProductSchema } from '@application/dtos/product.dto';
+import { createProductSchema, updateProductSchema, type SortTypes } from '@application/dtos/product.dto';
 import {
   CreateProductUseCase,
   FindAllProductsUseCase,
@@ -56,8 +56,12 @@ export class ProductController {
 
   async findAll(req: Request, res: Response): Promise<Response> {
     try {
-      const products = await this.findAllProductsUseCase.execute();
-      return res.status(200).json(products);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const sort = (req.query.sort as SortTypes) || 'asc';
+
+      const result = await this.findAllProductsUseCase.execute({ page, limit, sort});
+      return res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({ message: error.message });
