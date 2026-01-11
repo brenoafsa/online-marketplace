@@ -1,8 +1,13 @@
 import type { IProductRepository } from '@core/repositories/product.repository.interface';
 import type { CreateProductDTO } from '@application/dtos/product.dto';
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class CreateProductUseCase {
-  constructor(private productRepository: IProductRepository) {}
+  constructor(
+    @inject('ProductRepository')
+    private productRepository: IProductRepository
+  ) {}
 
   async execute(data: CreateProductDTO): Promise<void> {
     const productExists = await this.productRepository.findByTitleCreatorId(data.title, data.creatorId);

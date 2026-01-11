@@ -2,9 +2,14 @@ import type { IUserRepository } from "@core/repositories/user.repository.interfa
 import type { CreateUserDTO, SignUpDTO } from "@application/dtos/user.dto";
 import { genSalt, hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class CreateUserUseCase {
-    constructor(private UserRepository: IUserRepository) {}
+    constructor(
+        @inject('UserRepository')
+        private UserRepository: IUserRepository
+    ) {}
 
     async execute(data: CreateUserDTO): Promise<SignUpDTO> {
         const existingUser = await this.UserRepository.findByEmail(data.email);

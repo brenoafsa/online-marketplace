@@ -1,6 +1,6 @@
 import { createUserSchema, updateUserSchema } from "@application/dtos/user.dto";
-import type { CreateAddressUseCase } from "@application/use-cases/address/create-address";
-import type { 
+import { CreateAddressUseCase } from "@application/use-cases/address/create-address";
+import { 
     FindAllUsersUseCase, 
     CreateUserUseCase,
     FindUserByIdUseCase,
@@ -9,7 +9,9 @@ import type {
 } from "@application/use-cases/user";
 import type { Request, Response } from "express";
 import { ZodError } from "zod";
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class UserController {
     constructor(
         private createUserUseCase: CreateUserUseCase,

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 import { UserController } from '../controllers/user.controller';
 import { UserRepository } from '@infrastructure/persistence/repositories/user.repository';
 import {
@@ -13,23 +14,20 @@ import { AddressRepository } from '@infrastructure/persistence/repositories/addr
 
 const userRouter = Router();
 
-// Instanciação direta das dependências
-const userRepository = new UserRepository();
-const addressRepository = new AddressRepository();
-const createUserUseCase = new CreateUserUseCase(userRepository);
-const getAllUsersUseCase = new FindAllUsersUseCase(userRepository);
-const getUserByIdUseCase = new FindUserByIdUseCase(userRepository);
-const updateUserUseCase = new UpdateUserUseCase(userRepository);
-const deleteUserUseCase = new DeleteUserUseCase(userRepository);
-const createAddressUseCase = new CreateAddressUseCase(addressRepository)
-const userController = new UserController(
-  createUserUseCase,
-  getAllUsersUseCase,
-  getUserByIdUseCase,
-  updateUserUseCase,
-  deleteUserUseCase,
-  createAddressUseCase
-);
+container.register('UserRepository', {
+  useClass: UserRepository,
+});
+container.register('AddressRepository', {
+  useClass: AddressRepository,
+});
+container.register(CreateUserUseCase, { useClass: CreateUserUseCase });
+container.register(FindAllUsersUseCase, { useClass: FindAllUsersUseCase });
+container.register(FindUserByIdUseCase, { useClass: FindUserByIdUseCase });
+container.register(UpdateUserUseCase, { useClass: UpdateUserUseCase });
+container.register(DeleteUserUseCase, { useClass: DeleteUserUseCase });
+container.register(CreateAddressUseCase, { useClass: CreateAddressUseCase });
+
+const userController = container.resolve(UserController);
 
 userRouter.post('/signup', (req, res) => userController.create(req, res));
 userRouter.get('/users', (req, res) => userController.findAll(req, res));

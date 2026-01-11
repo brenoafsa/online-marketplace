@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 import { AuthController } from '@infrastructure/http/controllers/auth.controller';
-import { UserRepository } from '@infrastructure/persistence/repositories/user.repository';
 import {
   AuthenticateUserUseCase,
   ValidateUserSessionUserCase,
@@ -9,14 +9,10 @@ import { authMiddleware } from '../middlewares/auth';
 
 const authRouter = Router();
 
-// Instanciação direta das dependências
-const userRepository = new UserRepository();
-const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository);
-const validateUserSessionUserCase = new ValidateUserSessionUserCase(userRepository);
-const authController = new AuthController(
-  authenticateUserUseCase,
-  validateUserSessionUserCase
-);
+container.register(AuthenticateUserUseCase, { useClass: AuthenticateUserUseCase });
+container.register(ValidateUserSessionUserCase, { useClass: ValidateUserSessionUserCase });
+
+const authController = container.resolve(AuthController);
 
 authRouter.post('/signin', (req, res) => authController.auth(req, res));
 authRouter.get('/auth', authMiddleware, (req, res) => authController.validateSession(req, res))

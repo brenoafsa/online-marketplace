@@ -1,11 +1,13 @@
-import type {
+import {
     AuthenticateUserUseCase,
     ValidateUserSessionUserCase
 } from "@application/use-cases/auth/index";
 import type { Request, Response } from "express";
 import { authSchema } from "@application/dtos/auth.dto";
 import { ZodError } from "zod";
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class AuthController {
     constructor (
         private AuthenticateUserUseCase: AuthenticateUserUseCase,

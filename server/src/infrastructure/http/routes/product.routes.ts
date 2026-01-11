@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 import { ProductController } from '@infrastructure/http/controllers/product.controller';
 import { ProductRepository } from '@infrastructure/persistence/repositories/product.repository';
 import {
@@ -11,20 +12,16 @@ import {
 
 const productRouter = Router();
 
-// Instanciação direta das dependências
-const productRepository = new ProductRepository();
-const createProductUseCase = new CreateProductUseCase(productRepository);
-const getAllProductsUseCase = new FindAllProductsUseCase(productRepository);
-const getProductByIdUseCase = new FindProductByIdUseCase(productRepository);
-const updateProductUseCase = new UpdateProductUseCase(productRepository);
-const deleteProductUseCase = new DeleteProductUseCase(productRepository);
-const productController = new ProductController(
-  createProductUseCase,
-  getAllProductsUseCase,
-  getProductByIdUseCase,
-  updateProductUseCase,
-  deleteProductUseCase,
-);
+container.register('ProductRepository', {
+  useClass: ProductRepository,
+});
+container.register(CreateProductUseCase, { useClass: CreateProductUseCase });
+container.register(FindAllProductsUseCase, { useClass: FindAllProductsUseCase });
+container.register(FindProductByIdUseCase, { useClass: FindProductByIdUseCase });
+container.register(UpdateProductUseCase, { useClass: UpdateProductUseCase });
+container.register(DeleteProductUseCase, { useClass: DeleteProductUseCase });
+
+const productController = container.resolve(ProductController);
 
 productRouter.post('/product', (req, res) => productController.create(req, res));
 productRouter.get('/products', (req, res) => productController.findAll(req, res));

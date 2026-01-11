@@ -5,7 +5,9 @@ import { userTable } from "@infrastructure/persistence/drizzle/schemas/user";
 import { User } from "@core/entities/user.entity";
 import { desc, eq } from "drizzle-orm";
 import { addressTable } from "@infrastructure/persistence/drizzle/schemas/address";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class UserRepository implements IUserRepository {
     async create(data: CreateUserDTO): Promise<string> {
         const [user] = await db.insert(userTable).values(data).returning();
