@@ -3,9 +3,14 @@ import type { IUserRepository } from "@core/repositories/user.repository.interfa
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import 'dotenv/config';
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class AuthenticateUserUseCase {
-    constructor(private UserRepository: IUserRepository) {}
+    constructor(
+        @inject('UserRepository')
+        private UserRepository: IUserRepository
+    ) {}
 
     async execute(credentials: AuthUserDTO): Promise<string | undefined> {
         const user = await this.UserRepository.findByEmail(credentials.email);
