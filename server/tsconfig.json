@@ -30,6 +30,10 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
+    "noPropertyAccessFromIndexSignature": false,
+
+    // Dependency injection inversion
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
   }
 }

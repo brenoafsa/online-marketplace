@@ -8,7 +8,9 @@ import {
   DeleteProductUseCase,
 } from '@application/use-cases/product';
 import { ZodError } from 'zod';
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class ProductController {
   constructor(
     private createProductUseCase: CreateProductUseCase,

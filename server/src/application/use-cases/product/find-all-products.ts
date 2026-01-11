@@ -1,8 +1,13 @@
 import type { IProductRepository } from '@core/repositories/product.repository.interface';
 import type { FindProductsParams, FindProductsResponse } from '@application/dtos/product.dto';
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class FindAllProductsUseCase {
-  constructor(private productRepository: IProductRepository) {}
+  constructor(
+    @inject('ProductRepository')
+    private productRepository: IProductRepository
+  ) {}
 
   async execute(params: FindProductsParams): Promise<FindProductsResponse> {
     const { products, total } = await this.productRepository.findAll(params);

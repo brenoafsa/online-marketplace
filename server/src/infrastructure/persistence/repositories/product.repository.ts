@@ -4,7 +4,9 @@ import { productTable } from "@infrastructure/persistence/drizzle/schemas/produc
 import type { IProductRepository } from "@core/repositories/product.repository.interface";
 import { Product } from "@core/entities/product.entity";
 import type { CreateProductDTO, UpdateProductDTO, FindProductsParams, FindProductsRepository } from "@application/dtos/product.dto";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class ProductRepository implements IProductRepository {
     async create(product: CreateProductDTO): Promise<void> {
         await db.insert(productTable).values(product).returning();

@@ -1,7 +1,12 @@
 import type { IProductRepository } from "@core/repositories/product.repository.interface";
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class DeleteProductUseCase {
-    constructor(private productRepository: IProductRepository) {}
+    constructor(
+        @inject('ProductRepository')
+        private productRepository: IProductRepository
+    ) {}
 
     async execute(id: string): Promise<void> {
         await this.productRepository.findById(id);
