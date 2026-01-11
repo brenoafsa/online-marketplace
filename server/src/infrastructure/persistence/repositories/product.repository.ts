@@ -1,23 +1,48 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { db } from "@infrastructure/persistence/drizzle/index";
 import { productTable } from "@infrastructure/persistence/drizzle/schemas/product";
 import type { IProductRepository } from "@core/repositories/product.repository.interface";
 import { Product } from "@core/entities/product.entity";
-import type { CreateProductDTO, UpdateProductDTO } from "@application/dtos/product.dto";
+import type { CreateProductDTO, UpdateProductDTO, FindProductsParams, FindProductsRepository } from "@application/dtos/product.dto";
 
 export class ProductRepository implements IProductRepository {
     async create(product: CreateProductDTO): Promise<void> {
         await db.insert(productTable).values(product).returning();
     }
 
-    async findAll(): Promise<Product[]> {
-        const products = await db.select().from(productTable).orderBy(desc(productTable.createdAt));
+    async findAll(params: FindProductsParams): Promise<FindProductsRepository> {
+        const offset = (params.page - 1) * params.limit;
+        const limit = params.limit;
+        const sort = params.sort;
+
+        const sortTable = {
+            'asc': productTable.createdAt,
+            'desc': desc(productTable.createdAt),
+            'priceAsc': productTable.price,
+            'priceDesc': desc(productTable.price)
+        }
+        
+        const products = await db
+        .select()
+        .from(productTable)
+        .orderBy(sortTable[sort])
+        .limit(limit)
+        .offset(offset);
 
         if (!products) {
             throw new Error("Failed to find products. The database did not return records.");
         }
 
-        return products.map(p => new Product(p));
+        const [result] = await db
+        .select({ count: count() })
+        .from(productTable);
+
+        const total = result?.count ?? 0;
+
+        return {
+            products: products.map(p => new Product(p)),
+            total: Number(total)
+        }
     }
 
     async findByTitleCreatorId(title: string, creatorId: string): Promise<Product | undefined> {

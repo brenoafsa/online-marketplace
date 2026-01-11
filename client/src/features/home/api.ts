@@ -15,7 +15,15 @@ export interface Product {
     creatorId: string;
 }
 
-export async function getProducts(): Promise<Product[]> {
-  const response = await api.get('/products');
+export interface ProductsResponse {
+  page: number,
+  total: number,
+  from: number,
+  to: number,
+  products: Product[]
+}
+
+export async function getProducts(): Promise<ProductsResponse> {
+  const response = await api.get('/products?page=1&limit=20&sort=priceAsc');
   return response.data;
 }
