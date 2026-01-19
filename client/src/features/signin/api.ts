@@ -2,8 +2,9 @@ import api from "@/lib/http";
 import { z } from "zod";
 
 export const formSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(1, "Senha é obrigatória"),
+    email: z.string().email("Email inválido"),
+    password: z.string().min(1, "Senha é obrigatória"),
+    rememberMe: z.boolean(),
 });
 
 export type FormData = z.infer<typeof formSchema>;

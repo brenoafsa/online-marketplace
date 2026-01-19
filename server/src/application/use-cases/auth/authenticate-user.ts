@@ -10,7 +10,7 @@ export class AuthenticateUserUseCase {
     constructor(
         @inject('UserRepository')
         private UserRepository: IUserRepository
-    ) {}
+    ) { }
 
     async execute(credentials: AuthUserDTO): Promise<string | undefined> {
         const user = await this.UserRepository.findByEmail(credentials.email);
@@ -33,10 +33,19 @@ export class AuthenticateUserUseCase {
 
         await this.UserRepository.update(user.id, { lastLogIn: new Date() });
 
-        const token = sign({ id: user.id }, secret, {
-            subject: user.id,
-            expiresIn: "1m",
-        });
+        let token
+
+        if (credentials.rememberMe) {
+            token = sign({ id: user.id }, secret, {
+                subject: user.id,
+                expiresIn: "20m",
+            });
+        } else {
+            token = sign({ id: user.id }, secret, {
+                subject: user.id,
+                expiresIn: "1m",
+            });
+        }
 
         return token;
     }

@@ -9,14 +9,14 @@ import { injectable } from 'tsyringe';
 
 @injectable()
 export class AuthController {
-    constructor (
+    constructor(
         private AuthenticateUserUseCase: AuthenticateUserUseCase,
         private ValidateUserSessionUserCase: ValidateUserSessionUserCase,
-    ) {}
+    ) { }
 
     async auth(req: Request, res: Response): Promise<Response> {
         try {
-            const { email, password } = req.body;
+            const { email, password, rememberMe } = req.body;
 
             if (!email || !password) {
                 return res.status(400).json({ message: 'Bad Request: Missing required fields.' });
@@ -24,25 +24,36 @@ export class AuthController {
 
             const credentialsData = authSchema.parse({
                 email,
-                password
+                password,
+                rememberMe
             });
 
             const token = await this.AuthenticateUserUseCase.execute(credentialsData);
 
-            res.cookie("token", token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                path: "/api",
-                maxAge: 1 * 60 * 1000,
-            });
+            if (rememberMe) {
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "strict",
+                    path: "/api",
+                    maxAge: 20 * 60 * 1000,
+                });
+            } else {
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "strict",
+                    path: "/api",
+                    maxAge: 1 * 60 * 1000,
+                });
+            }
 
             return res.status(200).json({ message: "Authenticated successfully" });
         } catch (error) {
             if (error instanceof ZodError) {
                 return res.status(400).json({
-                message: 'Validation failed',
-                errors: error.flatten().fieldErrors,
+                    message: 'Validation failed',
+                    errors: error.flatten().fieldErrors,
                 });
             }
             if (error instanceof Error && error.message === "Invalid credentials.") {
