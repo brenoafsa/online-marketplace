@@ -10,6 +10,9 @@ export function useSignIn() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      rememberMe: false,
+    }
   });
 
   const { mutate, isPending } = useMutation({
