@@ -1,13 +1,11 @@
 import type { IUserRepository } from "@core/repositories/user.repository.interface";
 import type { ITokenRepository } from "@core/repositories/token.repository.interface";
-import type { User } from "@core/entities/user.entity";
 import type { ValidateSessionDTO } from "@application/dtos/auth.dto";
 import { inject, injectable } from 'tsyringe';
-import { compare } from "bcrypt";
 import 'dotenv/config';
 
 @injectable()
-export class ValidateUserSessionUserCase {
+export class EndSessionUserCase {
     constructor(
         @inject('UserRepository')
         private UserRepository: IUserRepository,
@@ -15,7 +13,7 @@ export class ValidateUserSessionUserCase {
         private TokenRepository: ITokenRepository
     ) { }
 
-    async execute(data: ValidateSessionDTO): Promise<User | null> {
+    async execute(data: ValidateSessionDTO): Promise<void> {
         const user = await this.UserRepository.findById(data.id);
 
         if (!user) {
@@ -28,17 +26,6 @@ export class ValidateUserSessionUserCase {
             throw new Error("Invalid or expired token.");
         }
 
-        const isValid = await compare(data.token, token.token)
-
-        if (Date.now() > new Date(token.expiresAt).getTime()) {
-            await this.TokenRepository.delete(data.id);
-            throw new Error("Invalid or expired token.");
-        }
-
-        if (isValid) {
-            return user
-        }
-
-        return null
+        await this.TokenRepository.delete(data.id)
     }
 }

@@ -10,7 +10,7 @@ import {
   DeleteUserUseCase,
 } from '@application/use-cases/user';
 import { CreateAddressUseCase } from '@application/use-cases/address/create-address';
-import { CreateTokenUseCase } from '@application/use-cases/token/create-token';
+import { CreateTokenUseCase } from '@application/use-cases/auth/create-token';
 import { AddressRepository } from '@infrastructure/persistence/repositories/address.repository';
 import { TokenRepository } from '@infrastructure/persistence/repositories/token.repository';
 

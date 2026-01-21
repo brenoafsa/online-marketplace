@@ -2,6 +2,7 @@ import type { ITokenRepository } from "@core/repositories/token.repository.inter
 import type { CreateTokenUseCaseDTO } from "@application/dtos/token.dto";
 import { inject, injectable } from 'tsyringe';
 import { sign } from "jsonwebtoken";
+import { genSalt, hash } from "bcrypt";
 
 @injectable()
 export class CreateTokenUseCase {
@@ -10,7 +11,7 @@ export class CreateTokenUseCase {
         private TokenRepository: ITokenRepository
     ) { }
 
-    async execute(data: CreateTokenUseCaseDTO): Promise<void> {
+    async execute(data: CreateTokenUseCaseDTO): Promise<string> {
         const secret = process.env.JWT_SECRET;
 
         if (!secret) {
@@ -21,6 +22,9 @@ export class CreateTokenUseCase {
             subject: data.userId
         });
 
+        const salt = await genSalt(10);
+        const hashedToken = await hash(refreshToken, salt);
+
         const isToken = await this.TokenRepository.findByUserId(data.userId)
 
         let expiresAt;
@@ -28,15 +32,17 @@ export class CreateTokenUseCase {
         (data.rememberMe) ? expiresAt = new Date(Date.now() + 8 * 60 * 1000) : expiresAt = new Date(Date.now() + 4 * 60 * 1000)
 
         const info = {
-            token: refreshToken,
+            token: hashedToken,
             userId: data.userId,
             expiresAt
         }
 
         if (isToken) {
-            return await this.TokenRepository.update(info);
+            await this.TokenRepository.update(info);
         } else {
-            return await this.TokenRepository.create(info);
+            await this.TokenRepository.create(info);
         }
+
+        return refreshToken;
     }
 }

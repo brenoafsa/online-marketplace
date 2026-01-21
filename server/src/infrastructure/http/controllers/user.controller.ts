@@ -1,6 +1,6 @@
 import { createUserSchema, updateUserSchema } from "@application/dtos/user.dto";
 import { CreateAddressUseCase } from "@application/use-cases/address/create-address";
-import { CreateTokenUseCase } from "@application/use-cases/token/create-token";
+import { CreateTokenUseCase } from "@application/use-cases/auth/create-token";
 import {
     FindAllUsersUseCase,
     CreateUserUseCase,
@@ -66,9 +66,16 @@ export class UserController {
 
             await this.createAddressUseCase.execute(addressData);
 
-            await this.createTokenUseCase.execute({ userId: createdUser.id })
+            const refreshToken = await this.createTokenUseCase.execute({ userId: createdUser.id })
 
             res.cookie("token", createdUser.token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                path: "/api",
+            });
+
+            res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",

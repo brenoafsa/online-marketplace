@@ -15,3 +15,10 @@ export const authResponse = z.object({
 })
 
 export type AuthResponseDTO = z.infer<typeof authResponse>;
+
+export const validateSessionSchema = z.object({
+    id: z.string().min(1, 'Id is required.'),
+    token: z.string().min(1, 'Token is required.')
+})
+
+export type ValidateSessionDTO = z.infer<typeof  validateSessionSchema>;

@@ -36,7 +36,7 @@ export class CreateUserUseCase {
 
         const token = sign({ id: userId }, secret, {
             subject: userId,
-            expiresIn: "3m",
+            expiresIn: "1m",
         });
 
         return {

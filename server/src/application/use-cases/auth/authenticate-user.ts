@@ -35,7 +35,7 @@ export class AuthenticateUserUseCase {
 
         const token = sign({ id: user.id }, secret, {
             subject: user.id,
-            expiresIn: "3m",
+            expiresIn: "1m",
         })
 
         return {
