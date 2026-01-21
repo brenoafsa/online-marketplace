@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import type { Request, Response, NextFunction } from 'express';
-import { verify, type JwtPayload } from 'jsonwebtoken';
+import type { ITokenRepository } from '@core/repositories/token.repository.interface';
+import { verify, sign, type JwtPayload } from 'jsonwebtoken';
+import { container } from 'tsyringe';
 
 declare global {
     namespace Express {
@@ -12,30 +14,57 @@ declare global {
     }
 }
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+const tokenRepository = container.resolve<ITokenRepository>('TokenRepository');
+const SECRET = process.env.JWT_SECRET || '';
+
+export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const { token } = req.cookies;
 
-    if (!token) {
-        return res.status(401).json({ message: 'Unauthorized: Token not provided.' });
-    }
-
-    const secret = process.env.JWT_SECRET;
-    if (!secret) {
-        console.error('JWT secret is not defined.');
-        return res.status(500).json({ message: 'Internal Server Error: Authentication secret not configured.' });
-    }
+    if (!token) return res.status(401).json({ message: 'Token not provided.' });
+    if (!SECRET) return res.status(500).json({ message: 'Server configuration error.' });
 
     try {
-        const decoded = verify(token, secret) as JwtPayload;
-        
-        if (typeof decoded.sub !== 'string') {
-            return res.status(401).json({ message: 'Unauthorized: Invalid token payload.' });
+        const decoded = verify(token, SECRET) as JwtPayload;
+        req.user = { id: decoded.sub as string };
+        return next();
+    } catch (error: any) {
+        if (error.name === 'TokenExpiredError') {
+            const userId = (verify(token, SECRET, { ignoreExpiration: true }) as JwtPayload).sub;
+            
+            if (userId && await tryRefreshToken(userId, res)) {
+                req.user = { id: userId };
+                return next();
+            }
         }
 
-        req.user = { id: decoded.sub };
+        return res.status(401).json({ message: 'Unauthorized.' });
+    }
+}
 
-        return next();
-    } catch (error) {
-        return res.status(401).json({ message: 'Unauthorized: Invalid token.' });
+async function tryRefreshToken(userId: string, res: Response): Promise<boolean> {
+    try {
+        const refreshToken = await tokenRepository.findByUserId(userId);
+        const isValid = refreshToken && new Date(refreshToken.expiresAt) > new Date();
+
+        if (!isValid) {
+            await tokenRepository.delete(userId);
+            return false;
+        }
+
+        const newAccessToken = sign({ id: userId }, SECRET, {
+            subject: userId,
+            expiresIn: "3m",
+        })
+
+        res.cookie('token', newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            path: '/api',
+        });
+
+        return true;
+    } catch {
+        return false;
     }
 }

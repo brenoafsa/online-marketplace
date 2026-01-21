@@ -5,12 +5,14 @@ import {
   AuthenticateUserUseCase,
   ValidateUserSessionUserCase,
 } from '@application/use-cases/auth/index';
+import { CreateTokenUseCase } from '@application/use-cases/token/create-token';
 import { authMiddleware } from '../middlewares/auth';
 
 const authRouter = Router();
 
 container.register(AuthenticateUserUseCase, { useClass: AuthenticateUserUseCase });
 container.register(ValidateUserSessionUserCase, { useClass: ValidateUserSessionUserCase });
+container.register(CreateTokenUseCase, { useClass: CreateTokenUseCase });
 
 const authController = container.resolve(AuthController);
 

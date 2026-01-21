@@ -8,6 +8,7 @@ import * as purchaseSchema from './schemas/purchase';
 import * as reviewSchema from './schemas/review';
 import * as userSchema from './schemas/user';
 import * as wishListSchema from './schemas/wishList';
+import * as refreshTokenSchema from './schemas/token'
 
 const schema = {
   ...addressSchema,
@@ -16,6 +17,7 @@ const schema = {
   ...reviewSchema,
   ...userSchema,
   ...wishListSchema,
+  ...refreshTokenSchema,
 };
 
 const pool = new Pool({

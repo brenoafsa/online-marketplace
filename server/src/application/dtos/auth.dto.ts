@@ -7,3 +7,11 @@ export const authSchema = z.object({
 })
 
 export type AuthUserDTO = z.infer<typeof authSchema>;
+
+export const authResponse = z.object({
+    token: z.string().min(1, 'Token is required'),
+    expiresAt: z.date().optional(),
+    userId: z.string().min(1, 'User Id is required')
+})
+
+export type AuthResponseDTO = z.infer<typeof authResponse>;

@@ -6,6 +6,7 @@ import { reviewTable } from "./review";
 import { wishListTable } from "./wishList";
 import { productTable } from "./product";
 import { purchaseTable } from "./purchase";
+import { refreshTokenTable } from "./token";
 
 export const roleEnum = pgEnum("ROLE", ["CUSTOMER", "SELLER", "ADMIN"]);
 export const languageEnum = pgEnum("LANGUAGE", ["BR", "EN"]);
@@ -27,6 +28,7 @@ export const userTable = pgTable("user", {
 export const usersRelations = relations(userTable, ({ one, many }) => ({
   address: one(addressTable),
   wishList: one(wishListTable),
+  refreshToken: one(refreshTokenTable),
   purchases: many(purchaseTable),
   sellProducts: many(productTable),
   reviews: many(reviewTable)

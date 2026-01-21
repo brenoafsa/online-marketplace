@@ -9,7 +9,7 @@ export class CreateUserUseCase {
     constructor(
         @inject('UserRepository')
         private UserRepository: IUserRepository
-    ) {}
+    ) { }
 
     async execute(data: CreateUserDTO): Promise<SignUpDTO> {
         const existingUser = await this.UserRepository.findByEmail(data.email);
@@ -36,7 +36,7 @@ export class CreateUserUseCase {
 
         const token = sign({ id: userId }, secret, {
             subject: userId,
-            expiresIn: "1m",
+            expiresIn: "3m",
         });
 
         return {

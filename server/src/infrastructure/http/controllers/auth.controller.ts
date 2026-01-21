@@ -2,6 +2,7 @@ import {
     AuthenticateUserUseCase,
     ValidateUserSessionUserCase
 } from "@application/use-cases/auth/index";
+import { CreateTokenUseCase } from "@application/use-cases/token/create-token";
 import type { Request, Response } from "express";
 import { authSchema } from "@application/dtos/auth.dto";
 import { ZodError } from "zod";
@@ -12,6 +13,7 @@ export class AuthController {
     constructor(
         private AuthenticateUserUseCase: AuthenticateUserUseCase,
         private ValidateUserSessionUserCase: ValidateUserSessionUserCase,
+        private CreateTokenUseCase: CreateTokenUseCase
     ) { }
 
     async auth(req: Request, res: Response): Promise<Response> {
@@ -28,25 +30,25 @@ export class AuthController {
                 rememberMe
             });
 
-            const token = await this.AuthenticateUserUseCase.execute(credentialsData);
+            const response = await this.AuthenticateUserUseCase.execute(credentialsData);
 
-            if (rememberMe) {
-                res.cookie("token", token, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
-                    sameSite: "strict",
-                    path: "/api",
-                    maxAge: 20 * 60 * 1000,
-                });
-            } else {
-                res.cookie("token", token, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
-                    sameSite: "strict",
-                    path: "/api",
-                    maxAge: 1 * 60 * 1000,
-                });
+            if (!response) {
+                throw new Error("Authentication failed to return response.");
             }
+
+            const tokenData = {
+                userId: response.userId,
+                rememberMe: rememberMe
+            }
+
+            await this.CreateTokenUseCase.execute(tokenData)
+
+            res.cookie("token", response.token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                path: "/api",
+            });
 
             return res.status(200).json({ message: "Authenticated successfully" });
         } catch (error) {
