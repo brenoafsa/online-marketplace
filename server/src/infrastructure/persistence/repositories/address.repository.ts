@@ -10,7 +10,7 @@ export class AddressRepository implements IAddressRepository {
     async create(data: CreateAddressDTO): Promise<Address> {
         const [address] = await db.insert(addressTable).values(data).returning();
         if (!address) {
-            throw new Error("Failed to create user.");
+            throw new Error("Failed to create address.");
         }
         return address
     }

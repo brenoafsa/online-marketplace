@@ -29,6 +29,20 @@
       "when": 1767564773286,
       "tag": "0003_natural_sabra",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1768864963630,
+      "tag": "0004_classy_whirlwind",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768865815519,
+      "tag": "0005_cuddly_midnight",
+      "breakpoints": true
     }
   ]
 }

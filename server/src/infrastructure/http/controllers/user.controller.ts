@@ -1,7 +1,8 @@
 import { createUserSchema, updateUserSchema } from "@application/dtos/user.dto";
 import { CreateAddressUseCase } from "@application/use-cases/address/create-address";
-import { 
-    FindAllUsersUseCase, 
+import { CreateTokenUseCase } from "@application/use-cases/auth/create-token";
+import {
+    FindAllUsersUseCase,
     CreateUserUseCase,
     FindUserByIdUseCase,
     UpdateUserUseCase,
@@ -20,7 +21,8 @@ export class UserController {
         private updateUserUseCase: UpdateUserUseCase,
         private deleteUserUseCase: DeleteUserUseCase,
         private createAddressUseCase: CreateAddressUseCase,
-    ) {}
+        private createTokenUseCase: CreateTokenUseCase
+    ) { }
 
     async create(req: Request, res: Response): Promise<Response> {
         try {
@@ -51,8 +53,8 @@ export class UserController {
                 role,
                 language,
             });
-            
-            const createdUser= await this.createUserUseCase.execute(userData);
+
+            const createdUser = await this.createUserUseCase.execute(userData);
 
             const addressData = {
                 street,
@@ -64,20 +66,28 @@ export class UserController {
 
             await this.createAddressUseCase.execute(addressData);
 
+            const refreshToken = await this.createTokenUseCase.execute({ userId: createdUser.id })
+
             res.cookie("token", createdUser.token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
                 path: "/api",
-                maxAge: 1 * 60 * 1000,
+            });
+
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                path: "/api",
             });
 
             return res.status(201).json({ message: 'User created successfully.' });
         } catch (error) {
             if (error instanceof ZodError) {
                 return res.status(400).json({
-                message: 'Validation failed',
-                errors: error.flatten().fieldErrors,
+                    message: 'Validation failed',
+                    errors: error.flatten().fieldErrors,
                 });
             }
             if (error instanceof Error) {
@@ -101,7 +111,7 @@ export class UserController {
             const { id } = req.params;
 
             if (!id) {
-                return res.status(404).json({ message: 'ID was not provided'});
+                return res.status(404).json({ message: 'ID was not provided' });
             }
 
             const user = await this.findUserByIdUseCase.execute(id);
@@ -121,7 +131,7 @@ export class UserController {
             const data = req.body;
 
             if (!id) {
-                return res.status(400).json({ message: 'ID was not provided'});
+                return res.status(400).json({ message: 'ID was not provided' });
             }
 
             if (Object.keys(data).length === 0) {
@@ -129,15 +139,15 @@ export class UserController {
             }
 
             const changesData = updateUserSchema.parse(data);
-            
+
             await this.updateUserUseCase.execute(id, changesData);
 
             return res.status(200).json({ message: 'User updated successfully.' });
         } catch (error) {
             if (error instanceof ZodError) {
                 return res.status(400).json({
-                message: 'Validation failed',
-                errors: error.flatten().fieldErrors,
+                    message: 'Validation failed',
+                    errors: error.flatten().fieldErrors,
                 });
             }
             if (error instanceof Error) {
@@ -152,7 +162,7 @@ export class UserController {
             const { id } = req.params;
 
             if (!id) {
-                return res.status(400).json({ message: 'ID was not provided'});
+                return res.status(400).json({ message: 'ID was not provided' });
             }
 
             await this.deleteUserUseCase.execute(id);

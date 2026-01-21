@@ -1,13 +1,13 @@
 import type { IUserRepository } from "@core/repositories/user.repository.interface";
 import type { ITokenRepository } from "@core/repositories/token.repository.interface";
-import type { User } from "@core/entities/user.entity";
 import type { ValidateSessionDTO } from "@application/dtos/auth.dto";
 import { inject, injectable } from 'tsyringe';
 import { compare } from "bcrypt";
 import 'dotenv/config';
+import { sign } from "jsonwebtoken";
 
 @injectable()
-export class ValidateUserSessionUserCase {
+export class RefreshTokenSessionUserCase {
     constructor(
         @inject('UserRepository')
         private UserRepository: IUserRepository,
@@ -15,7 +15,13 @@ export class ValidateUserSessionUserCase {
         private TokenRepository: ITokenRepository
     ) { }
 
-    async execute(data: ValidateSessionDTO): Promise<User | null> {
+    async execute(data: ValidateSessionDTO): Promise<string | null> {
+        const secret = process.env.JWT_SECRET;
+
+        if (!secret) {
+            throw new Error("JWT secret is not defined.");
+        }
+
         const user = await this.UserRepository.findById(data.id);
 
         if (!user) {
@@ -36,7 +42,12 @@ export class ValidateUserSessionUserCase {
         }
 
         if (isValid) {
-            return user
+            const token = sign({ id: user.id }, secret, {
+                subject: user.id,
+                expiresIn: "1m",
+            })
+
+            return token
         }
 
         return null

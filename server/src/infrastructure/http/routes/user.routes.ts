@@ -10,7 +10,9 @@ import {
   DeleteUserUseCase,
 } from '@application/use-cases/user';
 import { CreateAddressUseCase } from '@application/use-cases/address/create-address';
+import { CreateTokenUseCase } from '@application/use-cases/auth/create-token';
 import { AddressRepository } from '@infrastructure/persistence/repositories/address.repository';
+import { TokenRepository } from '@infrastructure/persistence/repositories/token.repository';
 
 const userRouter = Router();
 
@@ -20,12 +22,16 @@ container.register('UserRepository', {
 container.register('AddressRepository', {
   useClass: AddressRepository,
 });
+container.register('TokenRepository', {
+  useClass: TokenRepository,
+});
 container.register(CreateUserUseCase, { useClass: CreateUserUseCase });
 container.register(FindAllUsersUseCase, { useClass: FindAllUsersUseCase });
 container.register(FindUserByIdUseCase, { useClass: FindUserByIdUseCase });
 container.register(UpdateUserUseCase, { useClass: UpdateUserUseCase });
 container.register(DeleteUserUseCase, { useClass: DeleteUserUseCase });
 container.register(CreateAddressUseCase, { useClass: CreateAddressUseCase });
+container.register(CreateTokenUseCase, { useClass: CreateTokenUseCase });
 
 const userController = container.resolve(UserController);
 

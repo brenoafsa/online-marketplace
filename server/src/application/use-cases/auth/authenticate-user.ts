@@ -1,4 +1,4 @@
-import type { AuthUserDTO } from "@application/dtos/auth.dto";
+import type { AuthUserDTO, AuthResponseDTO } from "@application/dtos/auth.dto";
 import type { IUserRepository } from "@core/repositories/user.repository.interface";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
@@ -12,7 +12,7 @@ export class AuthenticateUserUseCase {
         private UserRepository: IUserRepository
     ) { }
 
-    async execute(credentials: AuthUserDTO): Promise<string | undefined> {
+    async execute(credentials: AuthUserDTO): Promise<AuthResponseDTO | undefined> {
         const user = await this.UserRepository.findByEmail(credentials.email);
 
         if (!user) {
@@ -33,20 +33,14 @@ export class AuthenticateUserUseCase {
 
         await this.UserRepository.update(user.id, { lastLogIn: new Date() });
 
-        let token
+        const token = sign({ id: user.id }, secret, {
+            subject: user.id,
+            expiresIn: "1m",
+        })
 
-        if (credentials.rememberMe) {
-            token = sign({ id: user.id }, secret, {
-                subject: user.id,
-                expiresIn: "20m",
-            });
-        } else {
-            token = sign({ id: user.id }, secret, {
-                subject: user.id,
-                expiresIn: "1m",
-            });
-        }
-
-        return token;
+        return {
+            token,
+            userId: user.id
+        };
     }
 }

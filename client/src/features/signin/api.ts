@@ -13,7 +13,7 @@ export async function signInUser(data: FormData): Promise<void> {
     try {
         await api.post('/signin', data);
     } catch (error: any) {
-        const message = error.response?.data?.message || 'Falha ao criar usuário';
+        const message = error.response?.data?.message || 'Falha ao realizar login';
         throw new Error(message);
     }
 }
