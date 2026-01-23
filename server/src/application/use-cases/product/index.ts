@@ -3,3 +3,4 @@ export * from './delete-product';
 export * from './find-all-products';
 export * from './find-product-by-id';
 export * from './update-product';
+export * from './find-category-count'

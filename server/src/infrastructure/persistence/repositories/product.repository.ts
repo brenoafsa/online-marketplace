@@ -3,7 +3,13 @@ import { db } from "@infrastructure/persistence/drizzle/index";
 import { productTable } from "@infrastructure/persistence/drizzle/schemas/product";
 import type { IProductRepository } from "@core/repositories/product.repository.interface";
 import { Product } from "@core/entities/product.entity";
-import type { CreateProductDTO, UpdateProductDTO, FindProductsParams, FindProductsRepository } from "@application/dtos/product.dto";
+import type {
+    CreateProductDTO,
+    UpdateProductDTO,
+    FindProductsParams,
+    FindProductsRepository,
+    FindCategoryCountResponse
+} from "@application/dtos/product.dto";
 import { injectable } from "tsyringe";
 
 @injectable()
@@ -23,21 +29,21 @@ export class ProductRepository implements IProductRepository {
             'priceAsc': productTable.price,
             'priceDesc': desc(productTable.price)
         }
-        
+
         const products = await db
-        .select()
-        .from(productTable)
-        .orderBy(sortTable[sort])
-        .limit(limit)
-        .offset(offset);
+            .select()
+            .from(productTable)
+            .orderBy(sortTable[sort])
+            .limit(limit)
+            .offset(offset);
 
         if (!products) {
             throw new Error("Failed to find products. The database did not return records.");
         }
 
         const [result] = await db
-        .select({ count: count() })
-        .from(productTable);
+            .select({ count: count() })
+            .from(productTable);
 
         const total = result?.count ?? 0;
 
@@ -47,12 +53,33 @@ export class ProductRepository implements IProductRepository {
         }
     }
 
+    async findCategoryCount(): Promise<FindCategoryCountResponse[]> {
+        const result = await db
+            .select({
+                category: productTable.category,
+                count: count()
+            })
+            .from(productTable)
+            .groupBy(productTable.category);
+
+        if (!result) {
+            throw Error("Failed to fetch products quantity. The database did not return records required.")
+        }
+
+        const data = result.map(row => ({
+            category: row.category,
+            count: Number(row.count)
+        }));
+
+        return data;
+    }
+
     async findByTitleCreatorId(title: string, creatorId: string): Promise<Product | undefined> {
         const [product] = await db
-        .select()
-        .from(productTable)
-        .where(and(eq(productTable.title, title), eq(productTable.creatorId, creatorId)))
-        .limit(1);
+            .select()
+            .from(productTable)
+            .where(and(eq(productTable.title, title), eq(productTable.creatorId, creatorId)))
+            .limit(1);
 
         if (!product) {
             return undefined;
@@ -60,7 +87,7 @@ export class ProductRepository implements IProductRepository {
 
         return new Product(product)
     }
-    
+
     async findById(id: string): Promise<Product> {
         const [product] = await db.select().from(productTable).where(eq(productTable.id, id)).limit(1);
 

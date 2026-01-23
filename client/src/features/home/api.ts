@@ -23,7 +23,17 @@ export interface ProductsResponse {
   products: Product[]
 }
 
+export interface ProductCountResponse {
+  category: "GAME" | "ASSET" | "COURSE" | "AUDIO" | "TEMPLATE" | "SOFTWARE" | "E-BOOK" | "VIDEO",
+  count: number
+}
+
 export async function getProducts(): Promise<ProductsResponse> {
   const response = await api.get('/products?page=1&limit=20&sort=priceAsc');
+  return response.data;
+}
+
+export async function getCategoryCount(): Promise<ProductCountResponse[]> {
+  const response = await api.get('/products/category');
   return response.data;
 }

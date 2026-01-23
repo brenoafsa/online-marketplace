@@ -13,7 +13,7 @@ declare global {
     }
 }
 
-const SECRET = process.env.JWT_SECRET || '';
+const SECRET = process.env.JWT_SECRET;
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const { token, refreshToken } = req.cookies;

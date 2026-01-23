@@ -46,3 +46,8 @@ export interface FindProductsRepository {
   products: Product[],
   total: number
 }
+
+export interface FindCategoryCountResponse {
+  category: 'GAME' | 'ASSET' | 'COURSE' | 'AUDIO' | 'TEMPLATE' | 'SOFTWARE' | 'E-BOOK' | 'VIDEO',
+  count: number
+}
