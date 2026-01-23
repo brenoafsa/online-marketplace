@@ -6,6 +6,7 @@ import {
   FindProductByIdUseCase,
   UpdateProductUseCase,
   DeleteProductUseCase,
+  FindCategoryCountUseCase,
 } from '@application/use-cases/product';
 import { ZodError } from 'zod';
 import { injectable } from 'tsyringe';
@@ -18,6 +19,7 @@ export class ProductController {
     private findProductByIdUseCase: FindProductByIdUseCase,
     private updateProductUseCase: UpdateProductUseCase,
     private deleteProductUseCase: DeleteProductUseCase,
+    private findCategoryCountUseCase: FindCategoryCountUseCase
   ) {}
 
   async create(req: Request, res: Response): Promise<Response> {
@@ -83,6 +85,19 @@ export class ProductController {
       const product = await this.findProductByIdUseCase.execute(id);
 
       return res.status(200).json(product);
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message });
+      }
+      return res.status(500).json({ message: 'An unexpected error occurred.' });
+    }
+  }
+
+  async findCategoryCount(req: Request, res: Response): Promise<Response> {
+    try {
+      const response = await this.findCategoryCountUseCase.execute();
+
+      return res.status(200).json(response)
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({ message: error.message });
