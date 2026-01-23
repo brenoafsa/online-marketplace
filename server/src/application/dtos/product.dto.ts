@@ -30,9 +30,13 @@ export interface FindProductsParams {
   page: number;
   limit: number;
   sort: SortTypes;
+  isSale: boolean;
+  isSpotlight: boolean;
+  price_gte: number | null;
+  price_lte: number | null;
 }
 
-export type SortTypes = 'asc' | 'desc' | 'priceAsc' | 'priceDesc'
+export type SortTypes = 'created-asc' | 'created-desc' | 'price-asc' | 'price-desc'
 
 export interface FindProductsResponse {
   page: number,

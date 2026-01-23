@@ -61,10 +61,24 @@ export class ProductController {
   async findAll(req: Request, res: Response): Promise<Response> {
     try {
       const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
-      const sort = (req.query.sort as SortTypes) || 'asc';
+      const limit = 10;
+      const sort = (req.query.sort as SortTypes) || 'created-asc';
+      const isSale = (req.query.sale == 'true');
+      const isSpotlight = (req.query.spotlight == 'true');
+      const price_gte = parseInt(req.query.price_gte as string) || null;
+      const price_lte = parseInt(req.query.price_lte as string) || null;
 
-      const result = await this.findAllProductsUseCase.execute({ page, limit, sort});
+      const data = {
+        page,
+        limit,
+        sort,
+        isSale,
+        isSpotlight,
+        price_gte,
+        price_lte
+      }
+
+      const result = await this.findAllProductsUseCase.execute(data);
       return res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {

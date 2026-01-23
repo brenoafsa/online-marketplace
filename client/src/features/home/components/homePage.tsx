@@ -32,7 +32,7 @@ export function HomePage() {
           <Link
             key={each.category}
             to="/products"
-            search={{ category: (each.category).toLowerCase() }}
+            search={{ category: (each.category).toLowerCase(), page: 1, sort_by: 'created-asc' }}
             className="block"
           >
             <CategoryCard

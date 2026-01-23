@@ -1,18 +1,18 @@
 import api from "@/lib/http";
 
 export interface Product {
-    id: string;
-    title: string;
-    price: number;
-    salePercentage: number | null;
-    purchaseCount: number | null;
-    onSpotlight: boolean;
-    stars: number | null;
-    createdAt: Date | null;
-    updatedAt: Date | null;
-    type: "PHYSICAL" | "DIGITAL";
-    category: "GAME" | "ASSET" | "COURSE" | "AUDIO" | "TEMPLATE" | "SOFTWARE" | "E-BOOK" | "VIDEO";
-    creatorId: string;
+  id: string;
+  title: string;
+  price: number;
+  salePercentage: number | null;
+  purchaseCount: number | null;
+  onSpotlight: boolean;
+  stars: number | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  type: "PHYSICAL" | "DIGITAL";
+  category: "GAME" | "ASSET" | "COURSE" | "AUDIO" | "TEMPLATE" | "SOFTWARE" | "E-BOOK" | "VIDEO";
+  creatorId: string;
 }
 
 export interface ProductsResponse {
@@ -29,7 +29,7 @@ export interface ProductCountResponse {
 }
 
 export async function getProducts(): Promise<ProductsResponse> {
-  const response = await api.get('/products?page=1&limit=20&sort=priceAsc');
+  const response = await api.get('/products?page=1&sort=price-asc');
   return response.data;
 }
 

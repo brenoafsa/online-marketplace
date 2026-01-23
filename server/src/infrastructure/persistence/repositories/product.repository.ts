@@ -1,4 +1,4 @@
-import { and, count, desc, eq } from "drizzle-orm";
+import { isNotNull, and, count, desc, eq, gte, lte, SQL } from "drizzle-orm";
 import { db } from "@infrastructure/persistence/drizzle/index";
 import { productTable } from "@infrastructure/persistence/drizzle/schemas/product";
 import type { IProductRepository } from "@core/repositories/product.repository.interface";
@@ -22,19 +22,31 @@ export class ProductRepository implements IProductRepository {
         const offset = (params.page - 1) * params.limit;
         const limit = params.limit;
         const sort = params.sort;
+        const isSale = params.isSale;
+        const isSpotlight = params.isSpotlight;
+        const price_gte = params.price_gte;
+        const price_lte = params.price_lte;
 
         const sortTable = {
-            'asc': productTable.createdAt,
-            'desc': desc(productTable.createdAt),
-            'priceAsc': productTable.price,
-            'priceDesc': desc(productTable.price)
+            'created-asc': productTable.createdAt,
+            'created-desc': desc(productTable.createdAt),
+            'price-asc': productTable.price,
+            'price-desc': desc(productTable.price)
         }
+
+        const filters: (SQL | undefined)[] = [
+            isSale ? isNotNull(productTable.salePercentage) : undefined,
+            isSpotlight ? eq(productTable.onSpotlight, true) : undefined,
+            price_gte ? gte(productTable.price, price_gte) : undefined,
+            price_lte ? lte(productTable.price, price_lte) : undefined,
+        ]
 
         const products = await db
             .select()
             .from(productTable)
             .orderBy(sortTable[sort])
             .limit(limit)
+            .where(and(...filters))
             .offset(offset);
 
         if (!products) {
@@ -43,7 +55,8 @@ export class ProductRepository implements IProductRepository {
 
         const [result] = await db
             .select({ count: count() })
-            .from(productTable);
+            .from(productTable)
+            .where(and(...filters));
 
         const total = result?.count ?? 0;
 
