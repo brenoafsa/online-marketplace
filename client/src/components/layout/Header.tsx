@@ -1,18 +1,26 @@
 import React from 'react';
 import { Link, useNavigate } from '@tanstack/react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { UserIcon, ShoppingCartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import api from '@/lib/http';
 
 export default function Header() {
   const [isItemOnCart] = React.useState<boolean>(false);
   const navigate = useNavigate()
-  const handleLogout = async () => {
-    try {
-      await api.post('/logout')
+  const queryClient = useQueryClient()
+  const { mutate: logout } = useMutation({
+    mutationFn: () => api.post('/logout'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] })
       navigate({ to: '/signin' })
-    } catch (error) {
+    },
+    onError: () => {
       console.error('Falha ao deslogar')
     }
+  })
+
+  const handleLogout = () => {
+    logout()
   }
 
   return (

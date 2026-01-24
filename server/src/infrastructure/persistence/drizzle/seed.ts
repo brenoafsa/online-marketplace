@@ -103,6 +103,7 @@ async function seed() {
       salePercentage: hasSale ? Math.floor(Math.random() * 50) + 5 : null,
       onSpotlight: Math.random() > 0.8,
       type: randomType,
+      stars: parseFloat((Math.random() * 5).toFixed(1)),
       category: randomCategory,
       creatorId: randomCreatorId!,
     });

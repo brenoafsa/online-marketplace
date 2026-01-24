@@ -10,6 +10,7 @@ import {
   DeleteProductUseCase,
   FindCategoryCountUseCase
 } from '@application/use-cases/product';
+import { authMiddleware } from '../middlewares/index';
 
 const productRouter = Router();
 
@@ -26,7 +27,7 @@ container.register(FindCategoryCountUseCase, { useClass: FindCategoryCountUseCas
 const productController = container.resolve(ProductController);
 
 productRouter.post('/product', (req, res) => productController.create(req, res));
-productRouter.get('/products', (req, res) => productController.findAll(req, res));
+productRouter.get('/products', authMiddleware, (req, res) => productController.findAll(req, res));
 productRouter.get('/products/category', (req, res) => productController.findCategoryCount(req, res));
 productRouter.get('/product/:id', (req, res) => productController.findById(req, res));
 productRouter.patch('/product/:id', (req, res) => productController.update(req, res));

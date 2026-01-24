@@ -26,13 +26,21 @@ export const updateProductSchema = z.object({
 
 export type UpdateProductDTO = z.infer<typeof updateProductSchema>;
 
+export type CategoryTypes = 'GAME' | 'ASSET' | 'COURSE' | 'AUDIO' | 'TEMPLATE' | 'SOFTWARE' | 'E-BOOK' | 'VIDEO';
+
 export interface FindProductsParams {
+  category: CategoryTypes;
   page: number;
   limit: number;
-  sort: SortTypes;
+  sort_by: SortTypes;
+  isSale: boolean;
+  isSpotlight: boolean;
+  star_avg: number | null;
+  price_gte: number | null;
+  price_lte: number | null;
 }
 
-export type SortTypes = 'asc' | 'desc' | 'priceAsc' | 'priceDesc'
+export type SortTypes = 'created-asc' | 'created-desc' | 'price-asc' | 'price-desc'
 
 export interface FindProductsResponse {
   page: number,
@@ -48,6 +56,6 @@ export interface FindProductsRepository {
 }
 
 export interface FindCategoryCountResponse {
-  category: 'GAME' | 'ASSET' | 'COURSE' | 'AUDIO' | 'TEMPLATE' | 'SOFTWARE' | 'E-BOOK' | 'VIDEO',
+  category: CategoryTypes,
   count: number
 }
