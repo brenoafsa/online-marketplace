@@ -8,7 +8,7 @@ import { createContext, useContext } from 'react'
 import { Toaster } from '@/components/ui/sonner'
 import api from '@/lib/http'
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 interface AuthContext {
   isAuthenticated: boolean
@@ -42,7 +42,7 @@ export const Route = createRootRoute({
     const auth = await queryClient.fetchQuery({
       queryKey: ['auth'],
       queryFn: fetchUser,
-      staleTime: 500
+      staleTime: 1000 * 60 * 15
     });
 
     if (!isPublicRoute) {
@@ -77,9 +77,9 @@ export const Route = createRootRoute({
         <QueryClientProvider client={queryClient}>
           {!isPublicRoute && <Header />}
           <Outlet />
-          {!isPublicRoute && <Footer/>}
+          {!isPublicRoute && <Footer />}
           <Toaster />
-          
+
           <TanStackDevtools
             config={{ position: 'bottom-right' }}
             plugins={[

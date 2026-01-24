@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createProductSchema, updateProductSchema, type SortTypes } from '@application/dtos/product.dto';
+import { createProductSchema, updateProductSchema, type CategoryTypes, type SortTypes } from '@application/dtos/product.dto';
 import {
   CreateProductUseCase,
   FindAllProductsUseCase,
@@ -20,7 +20,7 @@ export class ProductController {
     private updateProductUseCase: UpdateProductUseCase,
     private deleteProductUseCase: DeleteProductUseCase,
     private findCategoryCountUseCase: FindCategoryCountUseCase
-  ) {}
+  ) { }
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
@@ -60,20 +60,24 @@ export class ProductController {
 
   async findAll(req: Request, res: Response): Promise<Response> {
     try {
+      const category = (req.query.category as CategoryTypes) || null;
       const page = parseInt(req.query.page as string) || 1;
       const limit = 10;
-      const sort = (req.query.sort as SortTypes) || 'created-asc';
+      const sort_by = (req.query.sort_by as SortTypes) || 'created-asc';
       const isSale = (req.query.sale == 'true');
       const isSpotlight = (req.query.spotlight == 'true');
-      const price_gte = parseInt(req.query.price_gte as string) || null;
-      const price_lte = parseInt(req.query.price_lte as string) || null;
+      const star_avg = parseFloat(req.query.star_avg as string) || null
+      const price_gte = parseFloat(req.query.price_gte as string) || null;
+      const price_lte = parseFloat(req.query.price_lte as string) || null;
 
       const data = {
+        category,
         page,
         limit,
-        sort,
+        sort_by,
         isSale,
         isSpotlight,
+        star_avg,
         price_gte,
         price_lte
       }
@@ -93,7 +97,7 @@ export class ProductController {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(404).json({ message: 'ID was not provided'});
+        return res.status(404).json({ message: 'ID was not provided' });
       }
 
       const product = await this.findProductByIdUseCase.execute(id);
@@ -126,7 +130,7 @@ export class ProductController {
       const data = req.body;
 
       if (!id) {
-        return res.status(400).json({ message: 'ID was not provided'});
+        return res.status(400).json({ message: 'ID was not provided' });
       }
 
       if (Object.keys(data).length === 0) {
@@ -157,7 +161,7 @@ export class ProductController {
       const { id } = req.params;
 
       if (!id) {
-        return res.status(400).json({ message: 'ID was not provided'});
+        return res.status(400).json({ message: 'ID was not provided' });
       }
 
       await this.deleteProductUseCase.execute(id);

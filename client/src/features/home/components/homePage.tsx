@@ -1,17 +1,16 @@
-import { useProducts } from '../hooks/useProducts'
+import type { FiltersQuery } from '@/features/product-list/api';
 import { useCategoryCount } from '../hooks/useCategoryCount';
 import { CategoryCard } from './categoryCard'
 import { Link } from '@tanstack/react-router';
 
 export function HomePage() {
-  const { data: productsData, isPending: isProductsPending, error: productsError } = useProducts();
   const { data: categoryCountData, isPending: isCategoryCountPending, error: categoryCountError } = useCategoryCount();
 
-  if (isProductsPending || isCategoryCountPending) {
+  if (isCategoryCountPending) {
     return <div className='pt-18 text-center text-white'>CARREGANDO</div>
   }
 
-  if (productsError || categoryCountError) {
+  if (categoryCountError) {
     return <div className='pt-18 text-center text-red-500'>ERROR</div>
   }
 
@@ -32,7 +31,7 @@ export function HomePage() {
           <Link
             key={each.category}
             to="/products"
-            search={{ category: (each.category).toLowerCase(), page: 1, sort_by: 'created-asc' }}
+            search={{ category: (each.category).toLowerCase() as FiltersQuery['category'], page: 1, sort_by: 'created-asc' }}
             className="block"
           >
             <CategoryCard
@@ -40,11 +39,6 @@ export function HomePage() {
               quantity={each.count}
             />
           </Link>
-        ))}
-      </div>
-      <div>
-        {productsData.products.map((each) => (
-          <p key={each.id} className='text-white'>{each.title}: {each.price}</p>
         ))}
       </div>
     </div>

@@ -1,4 +1,5 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import { queryClient } from '@/routes/__root';
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
@@ -16,23 +17,24 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  
+
   async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
 
       try {
         await api.get('/refresh');
 
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('Sessão expirada. Redirecionando...');
+        queryClient.setQueryData(['auth'], null)
         return Promise.reject(refreshError);
       }
     }
-    
+
     return Promise.reject(error);
   }
 );

@@ -1,12 +1,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { signInUser, type FormData, formSchema } from "../api";
 import { toast } from "sonner";
 
 export function useSignIn() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -17,7 +18,8 @@ export function useSignIn() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: signInUser,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['auth'] });
       toast.success("Login concluído!");
       navigate({ to: "/home" });
     },

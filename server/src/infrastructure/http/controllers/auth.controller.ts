@@ -128,6 +128,9 @@ export class AuthController {
 
             return res.status(201).json({ message: 'Session refreshed.' });
         } catch (error) {
+            if (error instanceof Error && error.message === "Invalid or expired token.") {
+                return res.status(403).json({ message: 'Forbidden: Invalid or expired token.' });
+            }
             return res.status(500).json({ message: 'An unexpected error occurred.' });
         }
     }

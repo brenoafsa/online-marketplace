@@ -21,9 +21,11 @@ export class ProductRepository implements IProductRepository {
     async findAll(params: FindProductsParams): Promise<FindProductsRepository> {
         const offset = (params.page - 1) * params.limit;
         const limit = params.limit;
-        const sort = params.sort;
+        const category = params.category;
+        const sort = params.sort_by;
         const isSale = params.isSale;
         const isSpotlight = params.isSpotlight;
+        const star_avg = params.star_avg;
         const price_gte = params.price_gte;
         const price_lte = params.price_lte;
 
@@ -31,12 +33,16 @@ export class ProductRepository implements IProductRepository {
             'created-asc': productTable.createdAt,
             'created-desc': desc(productTable.createdAt),
             'price-asc': productTable.price,
-            'price-desc': desc(productTable.price)
+            'price-desc': desc(productTable.price),
+            'star_avg-asc': productTable.stars,
+            'star_avg-desc': desc(productTable.stars),
         }
 
         const filters: (SQL | undefined)[] = [
+            category ? eq(productTable.category, category) : undefined,
             isSale ? isNotNull(productTable.salePercentage) : undefined,
             isSpotlight ? eq(productTable.onSpotlight, true) : undefined,
+            star_avg ? gte(productTable.stars, star_avg) : undefined,
             price_gte ? gte(productTable.price, price_gte) : undefined,
             price_lte ? lte(productTable.price, price_lte) : undefined,
         ]
